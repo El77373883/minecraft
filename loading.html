@@ -5,65 +5,45 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>AdrianCraft - Loading</title>
+<title>AdrianCraft - Cargando</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{background:#000;overflow:hidden;width:100vw;height:100vh;font-family:'Segoe UI',system-ui,-apple-system,sans-serif;display:flex;align-items:center;justify-content:center}
-#loader{position:relative;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(180deg,#0a0a1a 0%,#1a0a2e 50%,#0a1628 100%)}
-.scene{perspective:800px;width:120px;height:120px;margin-bottom:40px}
-.cube{width:120px;height:120px;position:relative;transform-style:preserve-3d;animation:rotateCube 3s infinite linear}
-@keyframes rotateCube{0%{transform:rotateX(0deg) rotateY(0deg)}100%{transform:rotateX(360deg) rotateY(360deg)}}
-.face{position:absolute;width:120px;height:120px;border:2px solid rgba(255,255,255,0.15);backface-visibility:hidden}
-.front{background:linear-gradient(135deg,#5a8f3c 25%,#4a7a2e 50%,#3d6b24 75%);transform:translateZ(60px)}
-.back{background:linear-gradient(135deg,#8B6914 25%,#7a5c12 50%,#6b5010 75%);transform:rotateY(180deg) translateZ(60px)}
-.right{background:linear-gradient(135deg,#6B4226 25%,#5c3820 50%,#4d2e1a 75%);transform:rotateY(90deg) translateZ(60px)}
-.left{background:linear-gradient(135deg,#6B4226 25%,#5c3820 50%,#4d2e1a 75%);transform:rotateY(-90deg) translateZ(60px)}
-.top{background:linear-gradient(135deg,#5a8f3c 25%,#4a7a2e 50%,#3d6b24 75%);transform:rotateX(90deg) translateZ(60px)}
-.bottom{background:linear-gradient(135deg,#8B6914 25%,#7a5c12 50%,#6b5010 75%);transform:rotateX(-90deg) translateZ(60px)}
-.face::before{content:'';position:absolute;inset:0;background:repeating-conic-gradient(rgba(255,255,255,0.03) 0% 25%,transparent 0% 50%) 0 0/20px 20px}
-.title{font-size:42px;font-weight:900;color:#fff;letter-spacing:4px;text-shadow:0 0 30px rgba(90,143,60,0.8),0 0 60px rgba(90,143,60,0.4),0 4px 8px rgba(0,0,0,0.8);margin-bottom:4px;opacity:0;animation:fadeInUp 1s 0.5s forwards}
-.version{font-size:14px;color:rgba(255,255,255,0.5);letter-spacing:6px;font-weight:300;margin-bottom:50px;opacity:0;animation:fadeInUp 1s 0.8s forwards}
-.progress-container{width:260px;height:4px;background:rgba(255,255,255,0.1);border-radius:4px;overflow:hidden;position:relative;opacity:0;animation:fadeInUp 1s 1s forwards}
-.progress-bar{height:100%;width:0%;background:linear-gradient(90deg,#5a8f3c,#8bc34a);border-radius:4px;transition:width 0.3s;box-shadow:0 0 15px rgba(90,143,60,0.6)}
-.progress-text{font-size:11px;color:rgba(255,255,255,0.4);margin-top:12px;letter-spacing:2px;opacity:0;animation:fadeInUp 1s 1s forwards}
-.particles{position:absolute;inset:0;overflow:hidden;pointer-events:none}
-.particle{position:absolute;width:3px;height:3px;background:rgba(90,143,60,0.6);border-radius:50%;animation:float 4s infinite}
-@keyframes float{0%{transform:translateY(100vh) scale(0);opacity:0}10%{opacity:1}90%{opacity:1}100%{transform:translateY(-10vh) scale(1);opacity:0}}
-@keyframes fadeInUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-.glow{position:absolute;width:300px;height:300px;background:radial-gradient(circle,rgba(90,143,60,0.15) 0%,transparent 70%);border-radius:50%;animation:pulse 3s infinite}
-@keyframes pulse{0%,100%{transform:scale(1);opacity:0.5}50%{transform:scale(1.3);opacity:0.8}}
-#loader.done{animation:fadeOut 0.8s forwards}
-@keyframes fadeOut{to{opacity:0;visibility:hidden}}
+body{background:#0a0a1a;overflow:hidden;width:100vw;height:100vh;display:flex;align-items:center;justify-content:center;font-family:system-ui,-apple-system,sans-serif}
+#loader{position:relative;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(ellipse at center,#1a1a2e 0%,#0a0a1a 100%)}
+.scene{perspective:600px;width:100px;height:100px;margin-bottom:30px}
+.cube{width:100px;height:100px;position:relative;transform-style:preserve-3d;animation:spin 3s infinite linear}
+@keyframes spin{to{transform:rotateX(360deg) rotateY(360deg)}}
+.face{position:absolute;width:100px;height:100px;border:1px solid rgba(255,255,255,0.1)}
+.front{background:#5a8f3c;transform:translateZ(50px)}
+.back{background:#8B6914;transform:rotateY(180deg) translateZ(50px)}
+.right{background:#6B4226;transform:rotateY(90deg) translateZ(50px)}
+.left{background:#6B4226;transform:rotateY(-90deg) translateZ(50px)}
+.top{background:#5a8f3c;transform:rotateX(90deg) translateZ(50px)}
+.bottom{background:#8B6914;transform:rotateX(-90deg) translateZ(50px)}
+.title{font-size:38px;font-weight:900;color:#fff;letter-spacing:3px;text-shadow:0 0 20px rgba(90,143,60,0.6);margin-bottom:6px;opacity:0;animation:fadeUp 0.8s 0.5s forwards}
+.ver{color:rgba(255,255,255,0.4);font-size:12px;letter-spacing:5px;margin-bottom:40px;opacity:0;animation:fadeUp 0.8s 0.8s forwards}
+.bar{width:240px;height:3px;background:rgba(255,255,255,0.1);border-radius:3px;overflow:hidden;opacity:0;animation:fadeUp 0.8s 1s forwards}
+.fill{height:100%;width:0%;background:linear-gradient(90deg,#5a8f3c,#8bc34a);transition:width 0.2s}
+.txt{color:rgba(255,255,255,0.5);font-size:11px;margin-top:12px;letter-spacing:2px;opacity:0;animation:fadeUp 0.8s 1s forwards}
+@keyframes fadeUp{to{opacity:1;transform:translateY(0)}from{opacity:0;transform:translateY(10px)}}
+#loader.hide{animation:fadeOut 0.6s forwards}
+@keyframes fadeOut{to{opacity:0;pointer-events:none}}
 </style>
 </head>
 <body>
 <div id="loader">
-<div class="particles" id="particles"></div>
-<div class="glow"></div>
-<div class="scene">
-<div class="cube">
-<div class="face front"></div>
-<div class="face back"></div>
-<div class="face right"></div>
-<div class="face left"></div>
-<div class="face top"></div>
-<div class="face bottom"></div>
-</div>
-</div>
+<div class="scene"><div class="cube"><div class="face front"></div><div class="face back"></div><div class="face right"></div><div class="face left"></div><div class="face top"></div><div class="face bottom"></div></div></div>
 <div class="title">ADRIANCRAFT</div>
-<div class="version">VERSION 1.0</div>
-<div class="progress-container">
-<div class="progress-bar" id="progressBar"></div>
-</div>
-<div class="progress-text" id="progressText">CARGANDO RECURSOS...</div>
+<div class="ver">VERSION 1.0</div>
+<div class="bar"><div class="fill" id="fill"></div></div>
+<div class="txt" id="txt">INICIALIZANDO MOTOR 3D...</div>
 </div>
 <script>
-const msgs=['CARGANDO RECURSOS...','GENERANDO MUNDO...','CARGANDO TEXTURAS...','INICIALIZANDO MOTOR...','PREPARANDO ENTIDADES...','CARGANDO ALDEAS...','CASI LISTO...'];
-let p=0;const bar=document.getElementById('progressBar');const txt=document.getElementById('progressText');
-function step(){if(p>=100){setTimeout(()=>{document.getElementById('loader').classList.add('done');setTimeout(()=>window.location.href='lobby.html',800)},300);return}
-p+=Math.random()*8+2;if(p>100)p=100;bar.style.width=p+'%';txt.textContent=msgs[Math.min(Math.floor(p/15),msgs.length-1)];setTimeout(step,200+Math.random()*300)}
-setTimeout(step,1200);
-for(let i=0;i<30;i++){const d=document.createElement('div');d.className='particle';d.style.left=Math.random()*100+'%';d.style.animationDelay=Math.random()*4+'s';d.style.animationDuration=(3+Math.random()*3)+'s';document.getElementById('particles').appendChild(d)}
+const msgs=['INICIALIZANDO MOTOR 3D...','CARGANDO TEXTURAS...','GENERANDO TERRENO...','PREPARANDO ENTIDADES...','OPTIMIZANDO MEMORIA...','LISTO'];
+let p=0;const f=document.getElementById('fill'),t=document.getElementById('txt');
+function step(){if(p>=100){setTimeout(()=>{document.getElementById('loader').classList.add('hide');setTimeout(()=>location.href='lobby.html',600)},200);return}
+p+=Math.random()*12+3;if(p>100)p=100;f.style.width=p+'%';t.textContent=msgs[Math.min(p/20|0,msgs.length-1)];setTimeout(step,180+Math.random()*200)}
+setTimeout(step,800)
 </script>
 </body>
 </html>
