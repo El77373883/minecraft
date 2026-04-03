@@ -2,1126 +2,313 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover, maximum-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>AdrianCraft - Juego</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
-body{background:#000;overflow:hidden;width:100vw;height:100vh;font-family:'Segoe UI',system-ui,-apple-system,sans-serif}
+body{background:#000;overflow:hidden;width:100vw;height:100vh;font-family:system-ui,-apple-system,sans-serif}
 canvas{display:block;touch-action:none}
 #ui{position:fixed;inset:0;pointer-events:none;z-index:10}
-#coords{position:absolute;top:8px;left:8px;background:rgba(0,0,0,0.55);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);color:#fff;font-size:11px;padding:6px 10px;border-radius:8px;font-family:monospace;letter-spacing:0.5px}
-#timeDisplay{position:absolute;top:8px;right:8px;background:rgba(0,0,0,0.55);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);color:#fff;font-size:11px;padding:6px 10px;border-radius:8px;display:flex;align-items:center;gap:6px}
-#timeIcon{width:16px;height:16px}
-#inventoryBar{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);display:flex;gap:3px;background:rgba(0,0,0,0.6);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);padding:6px;border-radius:12px;border:1px solid rgba(255,255,255,0.1)}
-.inv-slot{width:44px;height:44px;background:rgba(255,255,255,0.08);border:2px solid rgba(255,255,255,0.1);border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;pointer-events:auto;position:relative;transition:all 0.15s}
-.inv-slot.selected{border-color:#5a8f3c;background:rgba(90,143,60,0.25);box-shadow:0 0 12px rgba(90,143,60,0.3)}
-.inv-slot:active{transform:scale(0.9)}
-.inv-slot canvas{width:32px;height:32px;image-rendering:pixelated}
-.inv-count{position:absolute;bottom:1px;right:3px;color:#fff;font-size:9px;font-weight:700;text-shadow:0 1px 2px rgba(0,0,0,0.8)}
-#controls{position:absolute;bottom:80px;pointer-events:auto}
-#dpad{position:absolute;bottom:80px;left:16px;width:130px;height:130px}
-.dpad-btn{position:absolute;width:44px;height:44px;background:rgba(255,255,255,0.12);border:2px solid rgba(255,255,255,0.15);border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.1s}
-.dpad-btn:active{background:rgba(255,255,255,0.25);transform:scale(0.9)}
-.dpad-btn svg{width:20px;height:20px;fill:rgba(255,255,255,0.8)}
-.dpad-up{left:43px;top:0}
-.dpad-down{left:43px;bottom:0}
-.dpad-left{left:0;top:43px}
-.dpad-right{right:0;top:43px}
-#actionBtns{position:absolute;bottom:80px;right:16px;display:flex;gap:10px;pointer-events:auto}
-.action-btn{width:56px;height:56px;border-radius:14px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.1s;border:2px solid rgba(255,255,255,0.15)}
-.action-btn:active{transform:scale(0.9)}
-.action-btn svg{width:24px;height:24px;fill:rgba(255,255,255,0.85)}
-#breakBtn{background:rgba(220,50,50,0.3)}
-#placeBtn{background:rgba(50,180,50,0.3)}
-#jumpBtn{background:rgba(50,100,220,0.3)}
-#backBtn{position:absolute;top:8px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.55);backdrop-filter:blur(6px);color:#fff;border:1px solid rgba(255,255,255,0.1);padding:6px 14px;border-radius:8px;font-size:12px;cursor:pointer;pointer-events:auto;display:flex;align-items:center;gap:6px}
-#backBtn svg{width:14px;height:14px;fill:currentColor}
-#modeIndicator{position:absolute;top:40px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.5);color:rgba(255,255,255,0.6);padding:4px 10px;border-radius:6px;font-size:10px;letter-spacing:1px}
+#coords{position:absolute;top:10px;left:10px;background:rgba(0,0,0,0.6);backdrop-filter:blur(8px);color:#fff;padding:6px 10px;border-radius:8px;font-size:12px;font-family:monospace;letter-spacing:1px}
+#time{position:absolute;top:10px;right:10px;background:rgba(0,0,0,0.6);backdrop-filter:blur(8px);color:#fff;padding:6px 10px;border-radius:8px;font-size:12px;display:flex;align-items:center;gap:6px}
+#mode{position:absolute;top:40px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.5);color:rgba(255,255,255,0.7);padding:4px 10px;border-radius:6px;font-size:10px;letter-spacing:1px}
+#inv{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);display:flex;gap:4px;background:rgba(0,0,0,0.65);backdrop-filter:blur(10px);padding:6px;border-radius:10px;border:1px solid rgba(255,255,255,0.1)}
+.slot{width:44px;height:44px;background:rgba(255,255,255,0.08);border:2px solid rgba(255,255,255,0.1);border-radius:8px;display:flex;align-items:center;justify-content:center;pointer-events:auto;position:relative}
+.slot.sel{border-color:#5a8f3c;background:rgba(90,143,60,0.25);box-shadow:0 0 10px rgba(90,143,60,0.4)}
+.slot canvas{width:32px;height:32px;image-rendering:pixelated}
+.cnt{position:absolute;bottom:2px;right:4px;color:#fff;font-size:9px;font-weight:700;text-shadow:0 1px 2px #000}
+#ctrls{position:absolute;inset:0;pointer-events:auto;display:flex}
+#joy{position:absolute;bottom:80px;left:20px;width:120px;height:120px;background:rgba(255,255,255,0.08);border:2px solid rgba(255,255,255,0.15);border-radius:50%;touch-action:none}
+#joy-k{position:absolute;width:40px;height:40px;background:rgba(255,255,255,0.3);border:2px solid rgba(255,255,255,0.5);border-radius:50%;top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none}
+#look{position:absolute;top:0;right:0;width:50%;height:70%;touch-action:none}
+#acts{position:absolute;bottom:80px;right:20px;display:flex;gap:12px;pointer-events:auto}
+.act{width:52px;height:52px;background:rgba(0,0,0,0.6);border:2px solid rgba(255,255,255,0.2);border-radius:12px;display:flex;align-items:center;justify-content:center}
+.act svg{width:22px;height:22px;fill:rgba(255,255,255,0.9)}
+#back{position:absolute;top:10px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.6);backdrop-filter:blur(8px);color:#fff;border:1px solid rgba(255,255,255,0.1);padding:6px 12px;border-radius:8px;font-size:12px;cursor:pointer;pointer-events:auto;display:flex;align-items:center;gap:6px}
+#back svg{width:14px;height:14px;fill:currentColor}
 </style>
 </head>
 <body>
-<canvas id="game"></canvas>
+<canvas id="c"></canvas>
 <div id="ui">
-<div id="coords">X: 0 Y: 0</div>
-<div id="timeDisplay"><div id="timeIcon"></div><span id="timeText">Dia</span></div>
-<div id="modeIndicator">MODO: CONSTRUIR</div>
-<button id="backBtn" onclick="window.location.href='lobby.html'">
-<svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
-Lobby
-</button>
-<div id="controls">
-<div id="dpad">
-<div class="dpad-btn dpad-up" id="btnUp"><svg viewBox="0 0 24 24"><path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"/></svg></div>
-<div class="dpad-btn dpad-down" id="btnDown"><svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></svg></div>
-<div class="dpad-btn dpad-left" id="btnLeft"><svg viewBox="0 0 24 24"><path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"/></svg></div>
-<div class="dpad-btn dpad-right" id="btnRight"><svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg></div>
+<div id="coords">X: 0 Y: 0 Z: 0</div>
+<div id="time"><span id="tIcon"></span><span id="tTxt">Dia</span></div>
+<div id="mode">MODO: CONSTRUIR</div>
+<div id="inv"></div>
+<div id="ctrls">
+<div id="joy"><div id="joy-k"></div></div>
+<div id="look"></div>
+<div id="acts">
+<div class="act" id="brk"><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></div>
+<div class="act" id="plc"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg></div>
+<div class="act" id="jmp"><svg viewBox="0 0 24 24"><path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"/></svg></div>
 </div>
 </div>
-<div id="actionBtns">
-<div class="action-btn" id="breakBtn"><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></div>
-<div class="action-btn" id="placeBtn"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg></div>
-<div class="action-btn" id="jumpBtn"><svg viewBox="0 0 24 24"><path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"/></svg></div>
-</div>
-<div id="inventoryBar"></div>
+<button id="back" onclick="location.href='lobby.html'"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>Lobby</button>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
 // ==================== CONFIG ====================
-const BLOCK_SIZE = 32;
-const WORLD_W = 300;
-const WORLD_H = 120;
-const GRAVITY = 0.45;
-const JUMP_FORCE = -8.5;
-const MOVE_SPEED = 3.2;
-const PLAYER_W = 20;
-const PLAYER_H = 28;
+const WORLD=300, BLOCK=1, GRAV=22, JUMP=8, SPD=5, SENS=0.002;
+const TYPES={0:null,1:{n:'Pasto',c:0x5a8f3c},2:{n:'Tierra',c:0x8B6914},3:{n:'Piedra',c:0x808080},4:{n:'Madera',c:0x6B4226},5:{n:'Hojas',c:0x3d6b24},6:{n:'Agua',c:0x3d7ab5,trans:true},7:{n:'Arena',c:0xe8d68e},8:{n:'Tablon',c:0xc49a5a},9:{n:'Adoquin',c:0x6b6b6b},10:{n:'Vidrio',c:0xadd8e6,trans:true},11:{n:'Lana',c:0xf0f0f0}};
 
-// ==================== BLOCK TYPES ====================
-const BLOCKS = {
-  0: { name: 'Aire', solid: false },
-  1: { name: 'Pasto', color: '#5a8f3c', top: '#6abf4a', bottom: '#8B6914', solid: true },
-  2: { name: 'Tierra', color: '#8B6914', solid: true },
-  3: { name: 'Piedra', color: '#808080', solid: true },
-  4: { name: 'Madera', color: '#6B4226', solid: true },
-  5: { name: 'Hojas', color: '#3d6b24', solid: true },
-  6: { name: 'Agua', color: '#3d7ab5', solid: false, transparent: true },
-  7: { name: 'Arena', color: '#e8d68e', solid: true },
-  8: { name: 'Tablon', color: '#c49a5a', solid: true },
-  9: { name: 'Piedra Ladrillo', color: '#a0522d', solid: true },
-  10: { name: 'Vidrio', color: '#add8e6', solid: true, transparent: true },
-  11: { name: 'Lana Blanca', color: '#f0f0f0', solid: true },
-  12: { name: 'Lana Roja', color: '#cc3333', solid: true },
-  13: { name: 'Lana Azul', color: '#3366cc', solid: true },
-  14: { name: 'Lana Verde', color: '#33aa33', solid: true },
-  15: { name: 'Carbon', color: '#3a3a3a', solid: true },
-  16: { name: 'Hierro', color: '#c4a882', solid: true },
-  17: { name: 'Oro', color: '#ffd700', solid: true },
-  18: { name: 'Diamante', color: '#00e5ff', solid: true },
-  19: { name: 'Adoquin', color: '#6b6b6b', solid: true },
-  20: { name: 'Mesa', color: '#8B5E3C', solid: true },
-  21: { name: 'Horno', color: '#555555', solid: true },
-  22: { name: 'Cama', color: '#cc2222', solid: true },
-};
+// ==================== STATE ====================
+let scene,cam,rend,raycaster,light,sun;
+let blocks=new Map(), ents=[];
+let inv=[{id:1,n:64},{id:2,n:64},{id:3,n:64},{id:4,n:32},{id:8,n:32},{id:5,n:16},{id:11,n:16}];
+let sel=0, gameTime=0;
+let pl={x:150,y:30,z:150,vy:0,onG:false,yaw:0,pitch:0};
+let joy={x:0,y:0}, look={x:0,y:0};
+let keys={w:false,a:false,s:false,d:false};
 
-// ==================== TEXTURE CACHE ====================
-const textureCache = {};
-function getTexture(id) {
-  if (textureCache[id]) return textureCache[id];
-  const c = document.createElement('canvas');
-  c.width = BLOCK_SIZE; c.height = BLOCK_SIZE;
-  const ctx = c.getContext('2d');
-  drawBlockTexture(ctx, id);
-  textureCache[id] = c;
-  return c;
+// ==================== INIT ====================
+function init(){
+  scene=new THREE.Scene();
+  scene.background=new THREE.Color(0x87CEEB);
+  scene.fog=new THREE.Fog(0x87CEEB,20,100);
+
+  cam=new THREE.PerspectiveCamera(70,innerWidth/innerHeight,0.1,150);
+  cam.position.set(pl.x,pl.y+1.6,pl.z);
+
+  rend=new THREE.WebGLRenderer({canvas:document.getElementById('c'),antialias:false,powerPreference:'high-performance'});
+  rend.setSize(innerWidth,innerHeight);
+  rend.setPixelRatio(Math.min(devicePixelRatio,2));
+
+  raycaster=new THREE.Raycaster();
+  raycaster.far=6;
+
+  light=new THREE.HemisphereLight(0xffffff,0x444444,0.6);
+  scene.add(light);
+  sun=new THREE.DirectionalLight(0xffffff,0.8);
+  sun.position.set(50,100,50);
+  scene.add(sun);
+
+  genWorld();
+  buildInv();
+  setupControls();
+  loop();
 }
 
-function drawBlockTexture(ctx, id) {
-  const b = BLOCKS[id];
-  if (!b || id === 0) return;
-  ctx.fillStyle = b.color;
-  ctx.fillRect(0, 0, BLOCK_SIZE, BLOCK_SIZE);
+// ==================== WORLD GEN ====================
+function noise(x,z){return Math.sin(x*12.9+z*78.2)*0.5+0.5}
+function h(x,z){return Math.floor(25+noise(x,z)*12+noise(x*2.1,z*2.1)*5+noise(x*0.05,z*0.05)*15)}
 
-  // Add pixel detail
-  ctx.globalAlpha = 0.15;
-  for (let i = 0; i < 8; i++) {
-    ctx.fillStyle = Math.random() > 0.5 ? '#fff' : '#000';
-    ctx.fillRect(Math.random() * BLOCK_SIZE | 0, Math.random() * BLOCK_SIZE | 0, 2, 2);
-  }
-  ctx.globalAlpha = 1;
+function genWorld(){
+  const g=new THREE.BoxGeometry(BLOCK,BLOCK,BLOCK);
+  const mats={};
+  for(let id in TYPES){if(!id)continue; mats[id]=new THREE.MeshLambertMaterial({color:TYPES[id].c,transparent:!!TYPES[id].trans,opacity:TYPES[id].trans?0.6:1})}
 
-  // Block border
-  ctx.strokeStyle = 'rgba(0,0,0,0.2)';
-  ctx.lineWidth = 1;
-  ctx.strokeRect(0.5, 0.5, BLOCK_SIZE - 1, BLOCK_SIZE - 1);
-
-  if (b.top) {
-    ctx.fillStyle = b.top;
-    ctx.fillRect(0, 0, BLOCK_SIZE, 4);
-    ctx.fillStyle = b.bottom;
-    ctx.fillRect(0, BLOCK_SIZE - 4, BLOCK_SIZE, 4);
-  }
-
-  // Special textures
-  if (id === 4) { // Wood grain
-    ctx.strokeStyle = 'rgba(0,0,0,0.15)';
-    for (let y = 0; y < BLOCK_SIZE; y += 6) {
-      ctx.beginPath(); ctx.moveTo(0, y + Math.random() * 2); ctx.lineTo(BLOCK_SIZE, y + Math.random() * 2); ctx.stroke();
-    }
-  }
-  if (id === 5) { // Leaves
-    ctx.fillStyle = '#2d5a14';
-    for (let i = 0; i < 6; i++) {
-      ctx.fillRect(Math.random() * 28, Math.random() * 28, 4, 4);
-    }
-  }
-  if (id === 15) { // Coal
-    ctx.fillStyle = '#1a1a1a';
-    ctx.fillRect(6, 6, 8, 6); ctx.fillRect(18, 16, 8, 6); ctx.fillRect(8, 22, 6, 5);
-  }
-  if (id === 16) { // Iron
-    ctx.fillStyle = '#e8d8c0';
-    ctx.fillRect(4, 8, 7, 5); ctx.fillRect(16, 4, 8, 5); ctx.fillRect(10, 18, 7, 5);
-  }
-  if (id === 17) { // Gold
-    ctx.fillStyle = '#fff8b0';
-    ctx.fillRect(5, 5, 7, 6); ctx.fillRect(18, 14, 7, 6); ctx.fillRect(10, 22, 6, 5);
-  }
-  if (id === 18) { // Diamond
-    ctx.fillStyle = '#80ffff';
-    ctx.fillRect(6, 6, 6, 5); ctx.fillRect(18, 12, 6, 5); ctx.fillRect(10, 20, 6, 5);
-    ctx.fillStyle = '#fff';
-    ctx.fillRect(8, 7, 2, 2); ctx.fillRect(20, 13, 2, 2);
-  }
-  if (id === 8) { // Planks
-    ctx.strokeStyle = 'rgba(0,0,0,0.12)';
-    for (let y = 0; y < BLOCK_SIZE; y += 8) {
-      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(BLOCK_SIZE, y); ctx.stroke();
-    }
-  }
-  if (id === 10) { // Glass
-    ctx.fillStyle = 'rgba(255,255,255,0.3)';
-    ctx.fillRect(2, 2, BLOCK_SIZE - 4, BLOCK_SIZE - 4);
-    ctx.strokeStyle = 'rgba(255,255,255,0.5)';
-    ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(BLOCK_SIZE, BLOCK_SIZE); ctx.stroke();
-  }
-  if (id === 20) { // Crafting table
-    ctx.fillStyle = '#6B4226';
-    ctx.fillRect(0, 0, BLOCK_SIZE, BLOCK_SIZE);
-    ctx.fillStyle = '#a0784a';
-    ctx.fillRect(2, 2, 13, 13); ctx.fillRect(17, 2, 13, 13);
-    ctx.fillRect(2, 17, 13, 13); ctx.fillRect(17, 17, 13, 13);
-    ctx.strokeStyle = 'rgba(0,0,0,0.3)';
-    ctx.strokeRect(2, 2, 13, 13); ctx.strokeRect(17, 2, 13, 13);
-    ctx.strokeRect(2, 17, 13, 13); ctx.strokeRect(17, 17, 13, 13);
-  }
-  if (id === 21) { // Furnace
-    ctx.fillStyle = '#444';
-    ctx.fillRect(6, 6, 20, 20);
-    ctx.fillStyle = '#ff6600';
-    ctx.fillRect(10, 14, 12, 10);
-    ctx.fillStyle = '#ffaa00';
-    ctx.fillRect(12, 16, 8, 6);
-  }
-}
-
-// ==================== WORLD GENERATION ====================
-let world = [];
-let surfaceY = [];
-
-function noise(x, seed) {
-  const n = Math.sin(x * 12.9898 + seed * 78.233) * 43758.5453;
-  return n - Math.floor(n);
-}
-
-function smoothNoise(x, seed) {
-  const ix = Math.floor(x);
-  const fx = x - ix;
-  const t = fx * fx * (3 - 2 * fx);
-  return noise(ix, seed) * (1 - t) + noise(ix + 1, seed) * t;
-}
-
-function terrainHeight(x) {
-  const base = 50;
-  const h1 = smoothNoise(x * 0.02, 42) * 20;
-  const h2 = smoothNoise(x * 0.05, 137) * 8;
-  const h3 = smoothNoise(x * 0.1, 256) * 4;
-  return Math.floor(base + h1 + h2 + h3);
-}
-
-function generateWorld() {
-  world = [];
-  surfaceY = [];
-  for (let x = 0; x < WORLD_W; x++) {
-    world[x] = [];
-    const sy = terrainHeight(x);
-    surfaceY[x] = sy;
-    for (let y = 0; y < WORLD_H; y++) {
-      if (y < sy) {
-        world[x][y] = 0;
-      } else if (y === sy) {
-        world[x][y] = 1;
-      } else if (y < sy + 4) {
-        world[x][y] = 2;
-      } else if (y < sy + 20) {
-        world[x][y] = Math.random() < 0.03 ? 15 : 3;
-        if (y > sy + 12 && Math.random() < 0.02) world[x][y] = 16;
-        if (y > sy + 16 && Math.random() < 0.01) world[x][y] = 17;
-        if (y > sy + 18 && Math.random() < 0.005) world[x][y] = 18;
-      } else {
-        world[x][y] = 3;
+  for(let x=0;x<WORLD;x++){
+    for(let z=0;z<WORLD;z++){
+      const sy=h(x,z);
+      for(let y=0;y<sy;y++){
+        let id=y===sy-1?1:(y>sy-4?2:3);
+        if(id===6||id===10)continue;
+        if(Math.random()<0.02&&y>sy-10)id=Math.random()<0.5?15:3;
+        setBlock(x,y,z,id);
       }
-    }
-  }
-
-  // Water in low areas
-  const waterLevel = 52;
-  for (let x = 0; x < WORLD_W; x++) {
-    if (surfaceY[x] > waterLevel) {
-      for (let y = waterLevel; y <= surfaceY[x]; y++) {
-        if (world[x][y] === 0) world[x][y] = 6;
-      }
-      if (world[x][surfaceY[x]] === 1) world[x][surfaceY[x]] = 7;
-    }
-  }
-
-  // Rivers
-  for (let x = 0; x < WORLD_W; x++) {
-    const riverNoise = smoothNoise(x * 0.03, 999);
-    if (riverNoise > 0.6 && riverNoise < 0.7) {
-      const riverY = waterLevel;
-      for (let dy = -2; dy <= 2; dy++) {
-        const ry = riverY + dy;
-        if (ry >= 0 && ry < WORLD_H && x < WORLD_W) {
-          world[x][ry] = 6;
-          if (ry === riverY + 2 && surfaceY[x] <= riverY) world[x][ry] = 7;
-        }
-      }
+      if(sy<28){for(let y=sy;y<28;y++)setBlock(x,y,z,6)}
     }
   }
 
   // Trees
-  for (let x = 5; x < WORLD_W - 5; x++) {
-    const treeNoise = noise(x, 777);
-    if (treeNoise > 0.85 && world[x][surfaceY[x]] === 1) {
-      const treeH = 5 + Math.floor(noise(x, 888) * 3);
-      const baseY = surfaceY[x];
-      // Trunk
-      for (let ty = 1; ty <= treeH; ty++) {
-        if (baseY - ty >= 0) world[x][baseY - ty] = 4;
+  for(let x=5;x<WORLD-5;x+=3+Math.floor(Math.random()*4)){
+    for(let z=5;z<WORLD-5;z+=3+Math.floor(Math.random()*4)){
+      if(Math.random()>0.3)continue;
+      const sy=h(x,z);
+      if(sy<28)continue;
+      const th=4+Math.floor(Math.random()*3);
+      for(let y=1;y<=th;y++)setBlock(x,sy+y,z,4);
+      for(let dx=-2;dx<=2;dx++)for(let dz=-2;dz<=2;dz++)for(let dy=th-1;dy<=th+1;dy++){
+        if(Math.abs(dx)+Math.abs(dz)+Math.abs(dy-th)<4)
+        if(dx||dz||dy>th) setBlock(x+dx,sy+dy,z+dz,5);
       }
-      // Leaves
-      for (let lx = -2; lx <= 2; lx++) {
-        for (let ly = -3; ly <= -1; ly++) {
-          const wx = x + lx;
-          const wy = baseY - treeH + ly;
-          if (wx >= 0 && wx < WORLD_W && wy >= 0 && wy < WORLD_H) {
-            if (world[wx][wy] === 0 && Math.abs(lx) + Math.abs(ly + 2) < 4) {
-              world[wx][wy] = 5;
-            }
-          }
-        }
-      }
-      x += 4;
     }
   }
 
-  // Villages
-  const villagePositions = [];
-  for (let x = 20; x < WORLD_W - 30; x += 15 + Math.floor(noise(x, 555) * 10)) {
-    if (Math.abs(surfaceY[x] - 50) < 5) {
-      villagePositions.push(x);
-      // House
-      const hw = 6 + Math.floor(noise(x, 666) * 3);
-      const hh = 4;
-      const baseY = surfaceY[x];
-      for (let dx = 0; dx < hw; dx++) {
-        for (let dy = 0; dy < hh; dy++) {
-          const wx = x + dx;
-          const wy = baseY - dy;
-          if (wx >= 0 && wx < WORLD_W && wy >= 0) {
-            if (dy === hh - 1 || dx === 0 || dx === hw - 1) {
-              world[wx][wy] = 8;
-            } else {
-              world[wx][wy] = 0;
-            }
-          }
-        }
-      }
-      // Roof
-      for (let dx = -1; dx <= hw; dx++) {
-        const wx = x + dx;
-        const wy = baseY - hh;
-        if (wx >= 0 && wx < WORLD_W && wy >= 0) world[wx][wy] = 9;
-      }
-      // Door
-      const doorX = x + Math.floor(hw / 2);
-      if (doorX < WORLD_W) world[doorX][baseY] = 0;
+  // Entities
+  for(let i=0;i<20;i++){
+    const ex=20+Math.random()*260, ez=20+Math.random()*260;
+    const ey=h(Math.floor(ex),Math.floor(ez))+1.5;
+    ents.push({mesh:null,type:['cow','sheep','wolf'][i%3],x:ex,y:ey,z:ez,vx:0,vz:0,dir:Math.random()*Math.PI*2,t:0});
+  }
+}
 
-      x += hw + 5;
+function setBlock(x,y,z,id){
+  if(x<0||x>=WORLD||z<0||z>=WORLD||y<0)return;
+  const k=`${x},${y},${z}`;
+  if(id===0){if(blocks.has(k)){scene.remove(blocks.get(k));blocks.delete(k)}}
+  else{
+    if(blocks.has(k))scene.remove(blocks.get(k));
+    const m=new THREE.Mesh(new THREE.BoxGeometry(BLOCK,BLOCK,BLOCK),new THREE.MeshLambertMaterial({color:TYPES[id].c,transparent:!!TYPES[id].trans,opacity:TYPES[id].trans?0.6:1}));
+    m.position.set(x+0.5,y+0.5,z+0.5);
+    scene.add(m);
+    blocks.set(k,{mesh:m,x,y,z,id});
+  }
+}
+
+// ==================== CONTROLS ====================
+function setupControls(){
+  const joyEl=document.getElementById('joy'), joyK=document.getElementById('joy-k');
+  let joyTouch=null;
+  joyEl.ontouchstart=e=>{e.preventDefault();joyTouch=e.changedTouches[0].identifier;};
+  window.ontouchmove=e=>{
+    for(let t of e.changedTouches){
+      if(t.identifier===joyTouch){
+        const r=joyEl.getBoundingClientRect();
+        let dx=t.clientX-r.left-60, dy=t.clientY-r.top-60;
+        const d=Math.min(60,Math.hypot(dx,dy));
+        const a=Math.atan2(dy,dx);
+        dx=Math.cos(a)*d; dy=Math.sin(a)*d;
+        joy.x=dx/60; joy.y=dy/60;
+        joyK.style.transform=`translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px))`;
+      }
     }
-  }
-}
-
-// ==================== ENTITIES ====================
-let entities = [];
-
-function spawnEntities() {
-  entities = [];
-  // Cows
-  for (let i = 0; i < 15; i++) {
-    const x = 10 + Math.floor(Math.random() * (WORLD_W - 20));
-    entities.push({ type: 'cow', x: x * BLOCK_SIZE, y: (surfaceY[x] - 1) * BLOCK_SIZE, w: 24, h: 18, vx: 0, vy: 0, dir: Math.random() > 0.5 ? 1 : -1, timer: 0, alive: true });
-  }
-  // Sheep
-  for (let i = 0; i < 12; i++) {
-    const x = 10 + Math.floor(Math.random() * (WORLD_W - 20));
-    entities.push({ type: 'sheep', x: x * BLOCK_SIZE, y: (surfaceY[x] - 1) * BLOCK_SIZE, w: 20, h: 16, vx: 0, vy: 0, dir: Math.random() > 0.5 ? 1 : -1, timer: 0, alive: true, wool: ['#f0f0f0', '#cc3333', '#3366cc', '#33aa33'][Math.floor(Math.random() * 4)] });
-  }
-  // Wolves
-  for (let i = 0; i < 6; i++) {
-    const x = 10 + Math.floor(Math.random() * (WORLD_W - 20));
-    entities.push({ type: 'wolf', x: x * BLOCK_SIZE, y: (surfaceY[x] - 1) * BLOCK_SIZE, w: 20, h: 14, vx: 0, vy: 0, dir: 1, timer: 0, alive: true });
-  }
-  // Villagers
-  for (let i = 0; i < 8; i++) {
-    const x = 10 + Math.floor(Math.random() * (WORLD_W - 20));
-    entities.push({ type: 'villager', x: x * BLOCK_SIZE, y: (surfaceY[x] - 2) * BLOCK_SIZE, w: 18, h: 26, vx: 0, vy: 0, dir: 1, timer: 0, alive: true });
-  }
-}
-
-// ==================== PLAYER ====================
-let player = {
-  x: 150 * BLOCK_SIZE,
-  y: 0,
-  w: PLAYER_W,
-  h: PLAYER_H,
-  vx: 0,
-  vy: 0,
-  onGround: false,
-  selectedSlot: 0,
-  inventory: [
-    { id: 1, count: 64 },
-    { id: 2, count: 64 },
-    { id: 3, count: 64 },
-    { id: 4, count: 32 },
-    { id: 8, count: 32 },
-    { id: 9, count: 32 },
-    { id: 5, count: 32 },
-    { id: 10, count: 16 },
-    { id: 11, count: 16 },
-  ]
-};
-
-// ==================== CAMERA ====================
-let camera = { x: 0, y: 0 };
-
-// ==================== INPUT ====================
-let keys = { up: false, down: false, left: false, right: false };
-let touching = { up: false, down: false, left: false, right: false };
-
-function setupControls() {
-  const btns = {
-    'btnUp': 'up', 'btnDown': 'down', 'btnLeft': 'left', 'btnRight': 'right'
   };
-  for (const [id, key] of Object.entries(btns)) {
-    const el = document.getElementById(id);
-    el.addEventListener('touchstart', e => { e.preventDefault(); touching[key] = true; });
-    el.addEventListener('touchend', e => { e.preventDefault(); touching[key] = false; });
-    el.addEventListener('touchcancel', e => { touching[key] = false; });
-    el.addEventListener('mousedown', e => { touching[key] = true; });
-    el.addEventListener('mouseup', e => { touching[key] = false; });
-  }
+  window.ontouchend=e=>{for(let t of e.changedTouches)if(t.identifier===joyTouch){joy.x=0;joy.y=0;joyK.style.transform='translate(-50%,-50%)';joyTouch=null;}};
 
-  document.getElementById('breakBtn').addEventListener('touchstart', e => { e.preventDefault(); breakBlock(); });
-  document.getElementById('breakBtn').addEventListener('mousedown', e => { breakBlock(); });
-  document.getElementById('placeBtn').addEventListener('touchstart', e => { e.preventDefault(); placeBlock(); });
-  document.getElementById('placeBtn').addEventListener('mousedown', e => { placeBlock(); });
-  document.getElementById('jumpBtn').addEventListener('touchstart', e => { e.preventDefault(); jump(); });
-  document.getElementById('jumpBtn').addEventListener('mousedown', e => { jump(); });
-
-  // Touch on canvas for block interaction
-  canvas.addEventListener('touchstart', handleTouch);
-  canvas.addEventListener('mousedown', handleClick);
-}
-
-function jump() {
-  if (player.onGround) {
-    player.vy = JUMP_FORCE;
-    player.onGround = false;
-  }
-}
-
-// ==================== BLOCK INTERACTION ====================
-let breakTarget = null;
-let breakProgress = 0;
-
-function getTargetBlock() {
-  const pcx = player.x + player.w / 2;
-  const pcy = player.y + player.h / 2;
-  const dir = player.facing || 1;
-  const reach = 5;
-
-  for (let d = 1; d <= reach; d++) {
-    const tx = Math.floor((pcx + dir * d * BLOCK_SIZE) / BLOCK_SIZE);
-    const ty = Math.floor(pcy / BLOCK_SIZE);
-    // Also check above and below
-    for (let dy = -2; dy <= 2; dy++) {
-      const checkY = ty + dy;
-      if (tx >= 0 && tx < WORLD_W && checkY >= 0 && checkY < WORLD_H) {
-        if (world[tx][checkY] !== 0) {
-          return { x: tx, y: checkY };
-        }
-      }
+  const lookEl=document.getElementById('look');
+  let lookTouch=null, lx=0, ly=0;
+  lookEl.ontouchstart=e=>{e.preventDefault();lookTouch=e.changedTouches[0].identifier;lx=e.touches[0].clientX;ly=e.touches[0].clientY;};
+  window.ontouchmove=e=>{
+    for(let t of e.changedTouches)if(t.identifier===lookTouch){
+      pl.yaw-=(t.clientX-lx)*SENS;
+      pl.pitch-=(t.clientY-ly)*SENS;
+      pl.pitch=Math.max(-Math.PI/2.2,Math.min(Math.PI/2.2,pl.pitch));
+      lx=t.clientX; ly=t.clientY;
     }
-  }
-  return null;
+  };
+  window.ontouchend=e=>{for(let t of e.changedTouches)if(t.identifier===lookTouch)lookTouch=null;};
+
+  document.getElementById('brk').onclick=()=>breakBlock();
+  document.getElementById('plc').onclick=()=>placeBlock();
+  document.getElementById('jmp').onclick=()=>{if(pl.onG){pl.vy=JUMP;pl.onG=false;}};
 }
 
-function breakBlock() {
-  const target = getTargetBlock();
-  if (!target) return;
-  const block = world[target.x][target.y];
-  if (block === 0 || block === 6) return;
-
-  // Add to inventory
-  const dropId = block === 1 ? 2 : block; // Grass drops dirt
-  let slot = player.inventory.findIndex(s => s.id === dropId);
-  if (slot === -1 && player.inventory.length < 9) {
-    player.inventory.push({ id: dropId, count: 1 });
-  } else if (slot !== -1 && player.inventory[slot].count < 64) {
-    player.inventory[slot].count++;
-  }
-  world[target.x][target.y] = 0;
-  updateInventoryUI();
+function getTarget(){
+  const dir=new THREE.Vector3();
+  cam.getWorldDirection(dir);
+  raycaster.set(cam.position,dir);
+  const hits=[];
+  blocks.forEach(b=>{if(b.mesh)hits.push(b.mesh)});
+  const res=raycaster.intersectObjects(hits);
+  return res.length?res[0]:null;
 }
 
-function placeBlock() {
-  const target = getTargetBlock();
-  if (!target) return;
-
-  const slot = player.inventory[player.selectedSlot];
-  if (!slot || slot.count <= 0) return;
-
-  // Place on top of the target block
-  const placeY = target.y - 1;
-  if (placeY < 0 || placeY >= WORLD_H) return;
-  if (world[target.x][placeY] !== 0) return;
-
-  // Don't place inside player
-  const pbx = target.x * BLOCK_SIZE;
-  const pby = placeY * BLOCK_SIZE;
-  if (player.x < pbx + BLOCK_SIZE && player.x + player.w > pbx &&
-      player.y < pby + BLOCK_SIZE && player.y + player.h > pby) return;
-
-  world[target.x][placeY] = slot.id;
-  slot.count--;
-  if (slot.count <= 0) {
-    player.inventory.splice(player.selectedSlot, 1);
-    if (player.selectedSlot >= player.inventory.length) player.selectedSlot = Math.max(0, player.inventory.length - 1);
-  }
-  updateInventoryUI();
+function breakBlock(){
+  const hit=getTarget();if(!hit)return;
+  const p=hit.object.position;
+  const k=`${Math.floor(p.x)},${Math.floor(p.y)},${Math.floor(p.z)}`;
+  if(!blocks.has(k))return;
+  const b=blocks.get(k);
+  const id=b.id===1?2:b.id;
+  addToInv(id);
+  scene.remove(b.mesh);
+  blocks.delete(k);
 }
 
-// ==================== CANVAS SETUP ====================
-const canvas = document.getElementById('game');
-const ctx = canvas.getContext('2d');
-
-function resize() {
-  canvas.width = window.innerWidth * window.devicePixelRatio;
-  canvas.height = window.innerHeight * window.devicePixelRatio;
-  canvas.style.width = window.innerWidth + 'px';
-  canvas.style.height = window.innerHeight + 'px';
-  ctx.setTransform(window.devicePixelRatio, 0, 0, window.devicePixelRatio, 0, 0);
-}
-window.addEventListener('resize', resize);
-resize();
-
-// ==================== DAY/NIGHT CYCLE ====================
-let gameTime = 0; // 0-24000 ticks
-const DAY_LENGTH = 12000;
-
-function getTimeOfDay() {
-  const t = gameTime % DAY_LENGTH;
-  if (t < 1000) return { name: 'Amanecer', icon: '🌅', sky: '#ff8844', light: 0.6 };
-  if (t < 3000) return { name: 'Mañana', icon: '☀️', sky: '#87CEEB', light: 1.0 };
-  if (t < 8000) return { name: 'Dia', icon: '☀️', sky: '#5ba3d9', light: 1.0 };
-  if (t < 10000) return { name: 'Tarde', icon: '🌇', sky: '#ff9944', light: 0.7 };
-  if (t < 11000) return { name: 'Atardecer', icon: '🌆', sky: '#cc4422', light: 0.4 };
-  if (t < 12000) return { name: 'Noche', icon: '🌙', sky: '#0a0a2e', light: 0.15 };
-  return { name: 'Media Noche', icon: '🌑', sky: '#050515', light: 0.1 };
+function placeBlock(){
+  const hit=getTarget();if(!hit)return;
+  const n=hit.face.normal;
+  const p=hit.object.position;
+  const nx=Math.floor(p.x+n.x), ny=Math.floor(p.y+n.y), nz=Math.floor(p.z+n.z);
+  if(nx<0||nx>=WORLD||nz<0||nz>=WORLD||ny<0||ny>80)return;
+  if(pl.x-0.5<nx&&pl.x+0.5>nx&&pl.z-0.5<nz&&pl.z+0.5>nz&&pl.y>ny&&pl.y-1.8<ny+1)return;
+  const id=inv[sel]?.id;
+  if(!id)return;
+  addToInv(id,-1);
+  setBlock(nx,ny,nz,id);
 }
 
-function getSkyColor() {
-  const t = gameTime % DAY_LENGTH;
-  if (t < 1000) { const p = t / 1000; return lerpColor('#0a0a2e', '#ff8844', p); }
-  if (t < 2000) { const p = (t - 1000) / 1000; return lerpColor('#ff8844', '#87CEEB', p); }
-  if (t < 8000) return '#5ba3d9';
-  if (t < 10000) { const p = (t - 8000) / 2000; return lerpColor('#5ba3d9', '#ff9944', p); }
-  if (t < 11000) { const p = (t - 10000) / 1000; return lerpColor('#ff9944', '#0a0a2e', p); }
-  return '#050515';
+function addToInv(id,amt=1){
+  let s=inv.find(i=>i.id===id);
+  if(s)s.n=Math.max(0,Math.min(64,s.n+amt));
+  else if(amt>0&&inv.length<9)inv.push({id,n:amt});
+  inv=inv.filter(i=>i.n>0);
+  buildInv();
 }
 
-function getLightLevel() {
-  const t = gameTime % DAY_LENGTH;
-  if (t < 1000) return 0.3 + (t / 1000) * 0.7;
-  if (t < 8000) return 1.0;
-  if (t < 10000) return 1.0 - ((t - 8000) / 2000) * 0.8;
-  if (t < 11000) return 0.2 - ((t - 10000) / 1000) * 0.1;
-  return 0.1;
-}
-
-function lerpColor(a, b, t) {
-  const ah = parseInt(a.replace('#', ''), 16);
-  const bh = parseInt(b.replace('#', ''), 16);
-  const ar = (ah >> 16) & 0xff, ag = (ah >> 8) & 0xff, ab = ah & 0xff;
-  const br = (bh >> 16) & 0xff, bg = (bh >> 8) & 0xff, bb = bh & 0xff;
-  const rr = Math.round(ar + (br - ar) * t);
-  const rg = Math.round(ag + (bg - ag) * t);
-  const rb = Math.round(ab + (bb - ab) * t);
-  return '#' + ((rr << 16) | (rg << 8) | rb).toString(16).padStart(6, '0');
-}
-
-// ==================== COLLISION ====================
-function isSolid(bx, by) {
-  if (bx < 0 || bx >= WORLD_W || by < 0 || by >= WORLD_H) return true;
-  const block = world[bx][by];
-  return BLOCKS[block] && BLOCKS[block].solid;
-}
-
-function collideX() {
-  const left = Math.floor(player.x / BLOCK_SIZE);
-  const right = Math.floor((player.x + player.w - 1) / BLOCK_SIZE);
-  const top = Math.floor(player.y / BLOCK_SIZE);
-  const bottom = Math.floor((player.y + player.h - 1) / BLOCK_SIZE);
-
-  for (let bx = left; bx <= right; bx++) {
-    for (let by = top; by <= bottom; by++) {
-      if (isSolid(bx, by)) {
-        if (player.vx > 0) {
-          player.x = bx * BLOCK_SIZE - player.w;
-          player.vx = 0;
-        } else if (player.vx < 0) {
-          player.x = (bx + 1) * BLOCK_SIZE;
-          player.vx = 0;
-        }
-        return;
-      }
+function buildInv(){
+  const bar=document.getElementById('inv');bar.innerHTML='';
+  for(let i=0;i<9;i++){
+    const d=document.createElement('div');d.className='slot'+(i===sel?' sel':'');
+    if(inv[i]){
+      const c=document.createElement('canvas');c.width=32;c.height=32;
+      const ctx=c.getContext('2d');ctx.fillStyle='#'+TYPES[inv[i].id].c.toString(16).padStart(6,'0');
+      ctx.fillRect(4,4,24,24);ctx.strokeStyle='rgba(0,0,0,0.3)';ctx.strokeRect(4,4,24,24);
+      d.appendChild(c);
+      const cn=document.createElement('span');cn.className='cnt';cn.textContent=inv[i].n;d.appendChild(cn);
     }
+    d.onclick=()=>{sel=i;buildInv()};bar.appendChild(d);
   }
 }
 
-function collideY() {
-  const left = Math.floor(player.x / BLOCK_SIZE);
-  const right = Math.floor((player.x + player.w - 1) / BLOCK_SIZE);
-  const top = Math.floor(player.y / BLOCK_SIZE);
-  const bottom = Math.floor((player.y + player.h - 1) / BLOCK_SIZE);
+// ==================== PHYSICS & LOOP ====================
+function isSolid(x,y,z){
+  const k=`${x},${y},${z}`;
+  return blocks.has(k)&&!TYPES[blocks.get(k).id].trans;
+}
 
-  player.onGround = false;
-  for (let bx = left; bx <= right; bx++) {
-    for (let by = top; by <= bottom; by++) {
-      if (isSolid(bx, by)) {
-        if (player.vy > 0) {
-          player.y = by * BLOCK_SIZE - player.h;
-          player.vy = 0;
-          player.onGround = true;
-        } else if (player.vy < 0) {
-          player.y = (by + 1) * BLOCK_SIZE;
-          player.vy = 0;
-        }
-        return;
-      }
+function update(dt){
+  gameTime+=dt;
+  const t=gameTime%600;
+  let sky=0x87CEEB,l=1;
+  if(t<100){l=0.3+t/100*0.7;sky=0x111122}
+  else if(t<400){l=1;sky=0x87CEEB}
+  else if(t<480){l=1-(t-400)/80*0.7;sky=0x111122}
+  else{l=0.3;sky=0x111122}
+  scene.background.setHex(sky);scene.fog.color.setHex(sky);sun.intensity=l;
+
+  cam.position.set(pl.x,pl.y+1.6,pl.z);
+  cam.rotation.order='YXZ';cam.rotation.y=pl.yaw;cam.rotation.x=pl.pitch;
+
+  const fx=Math.sin(pl.yaw), fz=Math.cos(pl.yaw);
+  const rx=Math.cos(pl.yaw), rz=-Math.sin(pl.yaw);
+  let mx=0,mz=0;
+  if(keys.w||joy.y< -0.2){mx+=fx*-joy.y;mz+=fz*-joy.y}
+  if(keys.s||joy.y>0.2){mx+=fx*joy.y;mz+=fz*joy.y}
+  if(keys.a||joy.x< -0.2){mx+=rx*joy.x;mz+=rz*joy.x}
+  if(keys.d||joy.x>0.2){mx+=rx*-joy.x;mz+=rz*-joy.x}
+  const len=Math.hypot(mx,mz);if(len>0){mx/=len;mz/=len}
+
+  pl.x+=mx*SPD*dt;
+  if(checkCol(pl.x,pl.y,pl.z)){pl.x-=mx*SPD*dt}
+  pl.z+=mz*SPD*dt;
+  if(checkCol(pl.x,pl.y,pl.z)){pl.z-=mz*SPD*dt}
+
+  pl.vy-=GRAV*dt;
+  pl.y+=pl.vy*dt;
+  pl.onG=false;
+  if(checkCol(pl.x,pl.y,pl.z)){
+    pl.y-=pl.vy*dt;
+    if(pl.vy<0)pl.onG=true;
+    pl.vy=0;
+  }
+
+  document.getElementById('coords').textContent=`X:${Math.floor(pl.x)} Y:${Math.floor(pl.y)} Z:${Math.floor(pl.z)}`;
+  document.getElementById('tTxt').textContent=t<100?'Amanecer':t<400?'Dia':t<480?'Atardecer':'Noche';
+}
+
+function checkCol(x,y,z){
+  const r=0.3;
+  for(let dx=-1;dx<=1;dx++)for(let dy=-1;dy<=1;dy++)for(let dz=-1;dz<=1;dz++){
+    const bx=Math.floor(x+dx),by=Math.floor(y+dy),bz=Math.floor(z+dz);
+    if(isSolid(bx,by,bz)){
+      if(x+r>bx&&x-r<bx+1&&z+r>bz&&z-r<bz+1&&y+1.8>by&&y<by+1)return true;
     }
-  }
+  }return false;
 }
 
-// ==================== ENTITY AI ====================
-function updateEntities() {
-  for (const e of entities) {
-    if (!e.alive) continue;
-    e.timer++;
-
-    // Random movement
-    if (e.timer % 120 === 0) {
-      e.dir = Math.random() > 0.5 ? 1 : -1;
-      e.vx = (Math.random() * 0.8 + 0.3) * e.dir;
-    }
-
-    // Gravity
-    e.vy += GRAVITY * 0.5;
-
-    // Move X
-    e.x += e.vx;
-    const ebx1 = Math.floor(e.x / BLOCK_SIZE);
-    const ebx2 = Math.floor((e.x + e.w) / BLOCK_SIZE);
-    const eby = Math.floor((e.y + e.h - 1) / BLOCK_SIZE);
-    if (isSolid(ebx1, eby) || isSolid(ebx2, eby)) {
-      e.vx *= -1;
-      e.x += e.vx * 2;
-    }
-
-    // Move Y
-    e.y += e.vy;
-    const eby1 = Math.floor(e.y / BLOCK_SIZE);
-    const eby2 = Math.floor((e.y + e.h) / BLOCK_SIZE);
-    const ebx = Math.floor((e.x + e.w / 2) / BLOCK_SIZE);
-    if (isSolid(ebx, eby2)) {
-      e.y = eby2 * BLOCK_SIZE - e.h;
-      e.vy = 0;
-      // Random jump
-      if (Math.random() < 0.02 && e.type !== 'villager') {
-        e.vy = -5;
-      }
-    }
-
-    // Bounds
-    if (e.x < 0) { e.x = 0; e.vx = Math.abs(e.vx); }
-    if (e.x > WORLD_W * BLOCK_SIZE - e.w) { e.x = WORLD_W * BLOCK_SIZE - e.w; e.vx = -Math.abs(e.vx); }
-    if (e.y > WORLD_H * BLOCK_SIZE) { e.alive = false; }
-  }
+function loop(t){
+  requestAnimationFrame(loop);
+  update((t||performance.now())/1000);
+  rend.render(scene,cam);
 }
 
-// ==================== DRAWING ====================
-function drawEntity(e) {
-  if (!e.alive) return;
-  const sx = e.x - camera.x;
-  const sy = e.y - camera.y;
-
-  if (sx > window.innerWidth + 50 || sx + e.w < -50 || sy > window.innerHeight + 50 || sy + e.h < -50) return;
-
-  ctx.save();
-  ctx.translate(sx + e.w / 2, sy + e.h / 2);
-  if (e.dir < 0) ctx.scale(-1, 1);
-  ctx.translate(-e.w / 2, -e.h / 2);
-
-  if (e.type === 'cow') {
-    // Body
-    ctx.fillStyle = '#8B4513';
-    ctx.fillRect(2, 2, 20, 12);
-    // Spots
-    ctx.fillStyle = '#f5f5dc';
-    ctx.fillRect(4, 4, 6, 4);
-    ctx.fillRect(14, 6, 5, 3);
-    // Head
-    ctx.fillStyle = '#8B4513';
-    ctx.fillRect(16, 0, 8, 8);
-    // Eye
-    ctx.fillStyle = '#000';
-    ctx.fillRect(20, 2, 2, 2);
-    // Legs
-    ctx.fillStyle = '#6B3410';
-    ctx.fillRect(4, 14, 3, 6);
-    ctx.fillRect(10, 14, 3, 6);
-    ctx.fillRect(16, 14, 3, 6);
-  } else if (e.type === 'sheep') {
-    // Body
-    ctx.fillStyle = e.wool;
-    ctx.fillRect(2, 2, 16, 10);
-    // Wool texture
-    ctx.fillStyle = 'rgba(255,255,255,0.3)';
-    ctx.fillRect(4, 3, 4, 4);
-    ctx.fillRect(10, 4, 4, 4);
-    // Head
-    ctx.fillStyle = '#333';
-    ctx.fillRect(14, 0, 6, 6);
-    // Eye
-    ctx.fillStyle = '#fff';
-    ctx.fillRect(17, 1, 2, 2);
-    // Legs
-    ctx.fillStyle = '#333';
-    ctx.fillRect(3, 12, 2, 5);
-    ctx.fillRect(8, 12, 2, 5);
-    ctx.fillRect(13, 12, 2, 5);
-  } else if (e.type === 'wolf') {
-    // Body
-    ctx.fillStyle = '#888';
-    ctx.fillRect(2, 2, 16, 8);
-    // Head
-    ctx.fillStyle = '#999';
-    ctx.fillRect(14, 0, 6, 6);
-    // Snout
-    ctx.fillStyle = '#aaa';
-    ctx.fillRect(18, 2, 4, 3);
-    // Eye
-    ctx.fillStyle = '#000';
-    ctx.fillRect(16, 1, 2, 2);
-    // Legs
-    ctx.fillStyle = '#777';
-    ctx.fillRect(3, 10, 2, 5);
-    ctx.fillRect(8, 10, 2, 5);
-    ctx.fillRect(13, 10, 2, 5);
-    // Tail
-    ctx.fillStyle = '#999';
-    ctx.fillRect(0, 0, 4, 4);
-  } else if (e.type === 'villager') {
-    // Body
-    ctx.fillStyle = '#8B6914';
-    ctx.fillRect(2, 8, 14, 14);
-    // Head
-    ctx.fillStyle = '#d4a574';
-    ctx.fillRect(4, 0, 10, 10);
-    // Nose
-    ctx.fillStyle = '#c49464';
-    ctx.fillRect(10, 5, 3, 4);
-    // Eyes
-    ctx.fillStyle = '#fff';
-    ctx.fillRect(5, 3, 3, 3);
-    ctx.fillRect(10, 3, 3, 3);
-    ctx.fillStyle = '#2c1810';
-    ctx.fillRect(6, 4, 2, 2);
-    ctx.fillRect(11, 4, 2, 2);
-    // Legs
-    ctx.fillStyle = '#5a4020';
-    ctx.fillRect(4, 22, 4, 5);
-    ctx.fillRect(10, 22, 4, 5);
-    // Arms
-    ctx.fillStyle = '#8B6914';
-    ctx.fillRect(0, 10, 3, 8);
-  }
-  ctx.restore();
-}
-
-function drawPlayer() {
-  const sx = player.x - camera.x;
-  const sy = player.y - camera.y;
-
-  ctx.save();
-  ctx.translate(sx + player.w / 2, sy + player.h / 2);
-  if (player.facing < 0) ctx.scale(-1, 1);
-  ctx.translate(-player.w / 2, -player.h / 2);
-
-  // Head
-  ctx.fillStyle = '#d4a574';
-  ctx.fillRect(3, 0, 14, 10);
-  // Hair
-  ctx.fillStyle = '#4a3020';
-  ctx.fillRect(3, 0, 14, 4);
-  // Eyes
-  ctx.fillStyle = '#fff';
-  ctx.fillRect(5, 5, 4, 3);
-  ctx.fillRect(11, 5, 4, 3);
-  ctx.fillStyle = '#2c1810';
-  ctx.fillRect(7, 6, 2, 2);
-  ctx.fillRect(13, 6, 2, 2);
-  // Mouth
-  ctx.fillStyle = '#8B4513';
-  ctx.fillRect(8, 8, 4, 1);
-
-  // Body
-  ctx.fillStyle = '#5a8f3c';
-  ctx.fillRect(2, 10, 16, 10);
-
-  // Arms
-  ctx.fillStyle = '#d4a574';
-  ctx.fillRect(0, 10, 3, 8);
-  ctx.fillRect(17, 10, 3, 8);
-
-  // Legs
-  ctx.fillStyle = '#3d5a99';
-  ctx.fillRect(3, 20, 6, 8);
-  ctx.fillRect(11, 20, 6, 8);
-
-  // Shoes
-  ctx.fillStyle = '#333';
-  ctx.fillRect(3, 26, 6, 2);
-  ctx.fillRect(11, 26, 6, 2);
-
-  ctx.restore();
-}
-
-function drawSky() {
-  const skyColor = getSkyColor();
-  ctx.fillStyle = skyColor;
-  ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
-
-  // Sun/Moon
-  const t = gameTime % DAY_LENGTH;
-  let celestialY, celestialX;
-
-  if (t < 11000) {
-    // Sun
-    const progress = t / 11000;
-    celestialX = window.innerWidth * 0.1 + window.innerWidth * 0.8 * progress;
-    celestialY = 40 + Math.sin(progress * Math.PI) * -30;
-    // Sun glow
-    const gradient = ctx.createRadialGradient(celestialX, celestialY, 0, celestialX, celestialY, 60);
-    gradient.addColorStop(0, 'rgba(255,200,50,0.8)');
-    gradient.addColorStop(0.5, 'rgba(255,200,50,0.2)');
-    gradient.addColorStop(1, 'rgba(255,200,50,0)');
-    ctx.fillStyle = gradient;
-    ctx.fillRect(celestialX - 60, celestialY - 60, 120, 120);
-    // Sun body
-    ctx.fillStyle = '#ffdd44';
-    ctx.beginPath();
-    ctx.arc(celestialX, celestialY, 20, 0, Math.PI * 2);
-    ctx.fill();
-  } else {
-    // Moon
-    const progress = (t - 11000) / (DAY_LENGTH - 11000);
-    celestialX = window.innerWidth * 0.1 + window.innerWidth * 0.8 * progress;
-    celestialY = 40 + Math.sin(progress * Math.PI) * -30;
-    ctx.fillStyle = '#dde8f0';
-    ctx.beginPath();
-    ctx.arc(celestialX, celestialY, 16, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.fillStyle = getSkyColor();
-    ctx.beginPath();
-    ctx.arc(celestialX + 6, celestialY - 4, 14, 0, Math.PI * 2);
-    ctx.fill();
-    // Stars
-    ctx.fillStyle = 'rgba(255,255,255,0.8)';
-    for (let i = 0; i < 30; i++) {
-      const sx = noise(i, 123) * window.innerWidth;
-      const sy = noise(i, 456) * window.innerHeight * 0.5;
-      const size = noise(i, 789) * 2 + 1;
-      ctx.fillRect(sx, sy, size, size);
-    }
-  }
-
-  // Clouds
-  ctx.fillStyle = 'rgba(255,255,255,0.6)';
-  const cloudOffset = gameTime * 0.05;
-  for (let i = 0; i < 8; i++) {
-    const cx = ((i * 200 + cloudOffset) % (window.innerWidth + 200)) - 100;
-    const cy = 30 + i * 15;
-    ctx.beginPath();
-    ctx.ellipse(cx, cy, 40 + i * 5, 15, 0, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.beginPath();
-    ctx.ellipse(cx + 25, cy - 5, 30, 12, 0, 0, Math.PI * 2);
-    ctx.fill();
-  }
-}
-
-function drawWorld() {
-  const startBX = Math.max(0, Math.floor(camera.x / BLOCK_SIZE) - 1);
-  const endBX = Math.min(WORLD_W, Math.ceil((camera.x + window.innerWidth) / BLOCK_SIZE) + 1);
-  const startBY = Math.max(0, Math.floor(camera.y / BLOCK_SIZE) - 1);
-  const endBY = Math.min(WORLD_H, Math.ceil((camera.y + window.innerHeight) / BLOCK_SIZE) + 1);
-
-  for (let bx = startBX; bx < endBX; bx++) {
-    for (let by = startBY; by < endBY; by++) {
-      const block = world[bx][by];
-      if (block === 0) continue;
-
-      const sx = bx * BLOCK_SIZE - camera.x;
-      const sy = by * BLOCK_SIZE - camera.y;
-
-      const tex = getTexture(block);
-      ctx.drawImage(tex, sx, sy, BLOCK_SIZE, BLOCK_SIZE);
-
-      // Light overlay
-      const light = getLightLevel();
-      if (light < 1) {
-        ctx.fillStyle = `rgba(0,0,20,${(1 - light) * 0.6})`;
-        ctx.fillRect(sx, sy, BLOCK_SIZE, BLOCK_SIZE);
-      }
-    }
-  }
-}
-
-function drawHighlight() {
-  const target = getTargetBlock();
-  if (!target) return;
-  const sx = target.x * BLOCK_SIZE - camera.x;
-  const sy = target.y * BLOCK_SIZE - camera.y;
-  ctx.strokeStyle = 'rgba(255,255,255,0.6)';
-  ctx.lineWidth = 2;
-  ctx.strokeRect(sx, sy, BLOCK_SIZE, BLOCK_SIZE);
-}
-
-// ==================== INVENTORY UI ====================
-function updateInventoryUI() {
-  const bar = document.getElementById('inventoryBar');
-  bar.innerHTML = '';
-  for (let i = 0; i < 9; i++) {
-    const slot = document.createElement('div');
-    slot.className = 'inv-slot' + (i === player.selectedSlot ? ' selected' : '');
-    if (player.inventory[i]) {
-      const item = player.inventory[i];
-      const texCanvas = getTexture(item.id);
-      slot.appendChild(texCanvas.cloneNode(true));
-      if (item.count > 1) {
-        const count = document.createElement('span');
-        count.className = 'inv-count';
-        count.textContent = item.count;
-        slot.appendChild(count);
-      }
-    }
-    slot.addEventListener('touchstart', e => { e.preventDefault(); player.selectedSlot = i; updateInventoryUI(); });
-    slot.addEventListener('mousedown', e => { player.selectedSlot = i; updateInventoryUI(); });
-    bar.appendChild(slot);
-  }
-}
-
-// ==================== TOUCH/CANVAS INTERACTION ====================
-let touchStartX = 0;
-let touchStartY = 0;
-let isDragging = false;
-
-function handleTouch(e) {
-  e.preventDefault();
-  const touch = e.touches[0];
-  const wx = touch.clientX + camera.x;
-  const wy = touch.clientY + camera.y;
-  const bx = Math.floor(wx / BLOCK_SIZE);
-  const by = Math.floor(wy / BLOCK_SIZE);
-
-  if (bx >= 0 && bx < WORLD_W && by >= 0 && by < WORLD_H) {
-    if (world[bx][by] !== 0) {
-      // Break
-      const block = world[bx][by];
-      if (block === 6) return;
-      const dropId = block === 1 ? 2 : block;
-      let slot = player.inventory.findIndex(s => s.id === dropId);
-      if (slot === -1 && player.inventory.length < 9) {
-        player.inventory.push({ id: dropId, count: 1 });
-      } else if (slot !== -1 && player.inventory[slot].count < 64) {
-        player.inventory[slot].count++;
-      }
-      world[bx][by] = 0;
-      updateInventoryUI();
-    } else {
-      // Place
-      const slot = player.inventory[player.selectedSlot];
-      if (slot && slot.count > 0) {
-        world[bx][by] = slot.id;
-        slot.count--;
-        if (slot.count <= 0) {
-          player.inventory.splice(player.selectedSlot, 1);
-          if (player.selectedSlot >= player.inventory.length) player.selectedSlot = Math.max(0, player.inventory.length - 1);
-        }
-        updateInventoryUI();
-      }
-    }
-  }
-}
-
-function handleClick(e) {
-  const wx = e.clientX + camera.x;
-  const wy = e.clientY + camera.y;
-  const bx = Math.floor(wx / BLOCK_SIZE);
-  const by = Math.floor(wy / BLOCK_SIZE);
-
-  if (bx >= 0 && bx < WORLD_W && by >= 0 && by < WORLD_H) {
-    if (world[bx][by] !== 0) {
-      const block = world[bx][by];
-      if (block === 6) return;
-      const dropId = block === 1 ? 2 : block;
-      let slot = player.inventory.findIndex(s => s.id === dropId);
-      if (slot === -1 && player.inventory.length < 9) {
-        player.inventory.push({ id: dropId, count: 1 });
-      } else if (slot !== -1 && player.inventory[slot].count < 64) {
-        player.inventory[slot].count++;
-      }
-      world[bx][by] = 0;
-      updateInventoryUI();
-    } else {
-      const slot = player.inventory[player.selectedSlot];
-      if (slot && slot.count > 0) {
-        world[bx][by] = slot.id;
-        slot.count--;
-        if (slot.count <= 0) {
-          player.inventory.splice(player.selectedSlot, 1);
-          if (player.selectedSlot >= player.inventory.length) player.selectedSlot = Math.max(0, player.inventory.length - 1);
-        }
-        updateInventoryUI();
-      }
-    }
-  }
-}
-
-// ==================== MAIN LOOP ====================
-let lastTime = 0;
-let fps = 0;
-let frameCount = 0;
-let fpsTime = 0;
-
-function update(dt) {
-  // Movement
-  player.vx = 0;
-  if (touching.left || keys.left) { player.vx = -MOVE_SPEED; player.facing = -1; }
-  if (touching.right || keys.right) { player.vx = MOVE_SPEED; player.facing = 1; }
-
-  // Apply gravity
-  player.vy += GRAVITY;
-
-  // Move X
-  player.x += player.vx;
-  collideX();
-
-  // Move Y
-  player.y += player.vy;
-  collideY();
-
-  // World bounds
-  if (player.x < 0) player.x = 0;
-  if (player.x > WORLD_W * BLOCK_SIZE - player.w) player.x = WORLD_W * BLOCK_SIZE - player.w;
-  if (player.y > WORLD_H * BLOCK_SIZE) {
-    player.y = 0;
-    player.vy = 0;
-  }
-
-  // Camera follow
-  const targetCX = player.x + player.w / 2 - window.innerWidth / 2;
-  const targetCY = player.y + player.h / 2 - window.innerHeight / 2;
-  camera.x += (targetCX - camera.x) * 0.15;
-  camera.y += (targetCY - camera.y) * 0.15;
-
-  // Clamp camera
-  camera.x = Math.max(0, Math.min(camera.x, WORLD_W * BLOCK_SIZE - window.innerWidth));
-  camera.y = Math.max(0, Math.min(camera.y, WORLD_H * BLOCK_SIZE - window.innerHeight));
-
-  // Time
-  gameTime += 1;
-
-  // Entities
-  updateEntities();
-
-  // Update UI
-  const px = Math.floor(player.x / BLOCK_SIZE);
-  const py = Math.floor(player.y / BLOCK_SIZE);
-  document.getElementById('coords').textContent = `X: ${px}  Y: ${py}`;
-
-  const tod = getTimeOfDay();
-  document.getElementById('timeText').textContent = tod.name;
-  document.getElementById('timeIcon').innerHTML = `<svg viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="6" fill="${tod.name.includes('Noche') || tod.name.includes('Media') ? '#dde8f0' : '#ffdd44'}"/></svg>`;
-}
-
-function render() {
-  ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
-
-  drawSky();
-  drawWorld();
-  drawHighlight();
-
-  // Entities
-  for (const e of entities) {
-    drawEntity(e);
-  }
-
-  drawPlayer();
-
-  // FPS
-  frameCount++;
-  const now = performance.now();
-  if (now - fpsTime > 1000) {
-    fps = frameCount;
-    frameCount = 0;
-    fpsTime = now;
-  }
-}
-
-function gameLoop(timestamp) {
-  const dt = timestamp - lastTime;
-  lastTime = timestamp;
-
-  update(dt);
-  render();
-
-  requestAnimationFrame(gameLoop);
-}
-
-// ==================== INIT ====================
-function init() {
-  generateWorld();
-
-  // Place player on surface
-  player.x = 150 * BLOCK_SIZE;
-  player.y = (surfaceY[150] - 3) * BLOCK_SIZE;
-  player.facing = 1;
-
-  spawnEntities();
-  setupControls();
-  updateInventoryUI();
-
-  player.facing = 1;
-
-  requestAnimationFrame(gameLoop);
-}
-
-init();
+window.onload=init;
 </script>
 </body>
 </html>
