@@ -9,32 +9,35 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:system-ui,-apple-system,sans-serif}
-#bg{position:absolute;inset0;background:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxkZWZzPjxwYXR0ZXJuIGlkPSJncmFkaWVudCIgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxMDAiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiPjxsaW5lYXJHcmFkaWVudCBpZD0iZzEiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4MT0iMCIgeTE9IjAiIHgyPSIxMCIgeTI9IjEwIj48c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjNTA1MDUwIi8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjMzAzMDMwIi8+PC9saW5lYXJHcmFkaWVudD48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDIiBmaWxsPSJ1cmwo2cxKSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNncmFkaWVudCkiLz48L3N2Zz4=') repeat}
-#lobby{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px}
-.logo{width:300px;height:80px;margin-bottom:30px}
-.buttons{display:flex;flex-direction:column;gap:16px;width:220px}
+#bg{position:absolute;inset:0;background:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxkZWZzPjxwYXR0ZXJuIGlkPSJncmFkaWVudCIgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxMDAiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiPjxsaW5lYXJHcmFkaWVudCBpZD0iZzEiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4MT0iMCIgeTE9IjAiIHgyPSIxMCIgeTI9IjEwIj48c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjNTA1MDUwIi8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjMzAzMDMwIi8+PC9saW5lYXJHcmFkaWVudD48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAiIGZpbGw9InVybCgjZzEpIi8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2dyYWRpZW50KSIvPjwvc3ZnPg==') repeat}
+#lobby{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;gap:20px}
+.logo{width:260px;height:70px;margin-bottom:20px}
+.buttons{display:flex;flex-direction:column;gap:14px;width:220px}
 .btn{width:100%;height:44px;background:#ccc;border:2px solid #aaa;border-radius:4px;color:#000;font-weight:700;font-size:16px;text-align:center;line-height:44px;cursor:pointer;transition:all 0.2s}
 .btn:hover{background:#ddd;border-color:#999}
 .btn:active{transform:scale(0.98)}
 .btn.active{background:#7755ff;border-color:#5533cc;color:#fff}
-.player{position:absolute;right:40px;top:50%;transform:translateY(-50%);width:64px;height:128px}
-.player-img{width:100%;height:100%;background:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2NCIgaGVpZ2h0PSIxMjgiPjxyZWN0IHdpZHRoPSI2NCIgaGVpZ2h0PSIxMjgiIGZpbGw9IiNmZmYiLz48cmVjdCB30iMzIiIGhlaWdodD0iNDgiIHg9IjE2IiB5PSI0MCIgZmlsbD0iI2Q0YTU3NCIvPjxyZWN0IHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgeD0iMjAiIHk9IjIwIiBmaWxsPSIjZDRhNTc0Ii8+PHJlY3Qgd2lkdGg9IjEyIiBoZWlnaHQ9IjEyIiB4PSIyNiIgeT0iMjQiIGZpbGw9IiMyYzE4MTAiLz48cmVjdCB3aWR0aD0iMTIiIGhlaWdodD0iMTIiIHg9IjM0IiB5PSIyNCIgZmlsbD0iIzJjMTgxMCIvPjxyZWN0IHdpZHRoPSIyNCIgaGVpZ2h0PSI0IiB4PSIyMCIgeT0iNDAiIGZpbGw9IiM4YjQ1MTMiLz48cmVjdCB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHg9IjE2IiB5PSI2NCIgZmlsbD0iIzVhOGYzYyIvPjxyZWN0IHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgeD0iMTgiIHk9Ijg0IiBmaWxsPSIjM2Q1YTljIi8+PHJlY3Qgd2lkdGg9IjE2IiBoZWlnaHQ9IjE2IiB4PSIzOCIgeT0iODQiIGZpbGw9IiMzZDVhOWMiLz48L3N2Zz4=') no-repeat center/contain}
-.perfil{position:absolute;left:40px;bottom:40px;display:flex;gap:10px}
+.player{position:absolute;right:20px;top:50%;transform:translateY(-50%);width:64px;height:128px}
+.player-img{width:100%;height:100%;background:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2NCIgaGVpZ2h0PSIxMjgiPjxyZWN0IHdpZHRoPSI2NCIgaGVpZ2h0PSIxMjgiIGZpbGw9IiNmZmYiLz48cmVjdCB3aWR0aD0iMzIiIGhlaWdodD0iNDgiIHg9IjE2IiB5PSI0MCIgZmlsbD0iI2Q0YTU3NCIvPjxyZWN0IHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgeD0iMjAiIHk9IjIwIiBmaWxsPSIjZDRhNTc0Ii8+PHJlY3Qgd2lkdGg9IjEyIiBoZWlnaHQ9IjEyIiB4PSIyNiIgeT0iMjQiIGZpbGw9IiMyYzE4MTAiLz48cmVjdCB3aWR0aD0iMTIiIGhlaWdodD0iMTIiIHg9IjM0IiB5PSIyNCIgZmlsbD0iIzJjMTgxMCIvPjxyZWN0IHdpZHRoPSIyNCIgaGVpZ2h0PSI0IiB4PSIyMCIgeT0iNDAiIGZpbGw9IiM4YjQ1MTMiLz48cmVjdCB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHg9IjE2IiB5PSI2NCIgZmlsbD0iIzVhOGYzYyIvPjxyZWN0IHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgeD0iMTgiIHk9Ijg0IiBmaWxsPSIjM2Q1YTljIi8+PHJlY3Qgd2lkdGg9IjE2IiBoZWlnaHQ9IjE2IiB4PSIzOCIgeT0iODQiIGZpbGw9IiMzZDVhOWMiLz48L3N2Zz4=') no-repeat center/contain}
+.vestidor{position:absolute;bottom:20px;right:20px;width:100px;height:40px;background:#ccc;border:2px solid #aaa;border-radius:4px;color:#000;font-weight:700;font-size:14px;text-align:center;line-height:40px;cursor:pointer;transition:all 0.2s}
+.vestidor:hover{background:#ddd;border-color:#999}
+.vestidor:active{transform:scale(0.98)}
+.perfil{position:absolute;left:20px;bottom:20px;display:flex;gap:10px}
 .icon{width:32px;height:32px;background:#ccc;border:2px solid #aaa;border-radius:4px;display:flex;align-items:center;justify-content:center}
 .icon svg{width:20px;height:20px;fill:#000}
-.version{position:absolute;bottom:20px;right:20px;color:#fff;font-size:12px}
+.version{position:absolute;bottom:20px;right:130px;color:#fff;font-size:12px}
 </style>
 </head>
 <body>
 <div id="bg"></div>
 <div id="lobby">
 <div class="logo">
-<svg viewBox="0 0 300 80" width="300" height="80">
-<g transform="translate(0,40)">
+<svg viewBox="0 0 260 70" width="260" height="70">
+<g transform="translate(0,35)">
 <path d="M10,0 L20,0 L25,10 L20,20 L10,20 L5,10 Z" fill="#808080" stroke="#404040" stroke-width="2"/>
 <path d="M25,10 L35,10 L40,20 L35,30 L25,30 L20,20 Z" fill="#808080" stroke="#404040" stroke-width="2"/>
 <path d="M40,20 L50,20 L55,30 L50,40 L40,40 L35,30 Z" fill="#808080" stroke="#404040" stroke-width="2"/>
-<path d="M55,30 L65,30 L700 L65,50 L55,50 L50,40 Z" fill="#808080" stroke="#404040" stroke-width="2"/>
+<path d="M55,30 L65,30 L70,40 L65,50 L55,50 L50,40 Z" fill="#808080" stroke="#404040" stroke-width="2"/>
 <path d="M70,40 L80,40 L85,50 L80,60 L70,60 L65,50 Z" fill="#808080" stroke="#404040" stroke-width="2"/>
 <path d="M85,50 L95,50 L100,60 L95,70 L85,70 L80,60 Z" fill="#808080" stroke="#404040" stroke-width="2"/>
 <path d="M100,60 L110,60 L115,70 L110,80 L100,80 L95,70 Z" fill="#808080" stroke="#404040" stroke-width="2"/>
@@ -42,14 +45,12 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:sys
 <path d="M130,80 L140,80 L145,90 L140,100 L130,100 L125,90 Z" fill="#808080" stroke="#404040" stroke-width="2"/>
 <path d="M145,90 L155,90 L160,100 L155,110 L145,110 L140,100 Z" fill="#808080" stroke="#404040" stroke-width="2"/>
 <path d="M160,100 L170,100 L175,110 L170,120 L160,120 L155,110 Z" fill="#808080" stroke="#404040" stroke-width="2"/>
-<path d="M175,110 L185,110 L190,120 L185,130 L175,130 L170,120 Z" fill="#808080" stroke="#404040" stroke-width="2"/>
+<path d="M175,110 L185,110 L190,120 L85,130 L175,130 L170,120 Z" fill="#80880" stroke="#404040" stroke-width="2"/>
 <path d="M190,120 L200,120 L205,130 L200,140 L190,140 L185,130 Z" fill="#808080" stroke="#404040" stroke-width="2"/>
 <path d="M205,130 L215,130 L220,140 L215,150 L205,150 L200,140 Z" fill="#808080" stroke="#404040" stroke-width="2"/>
 <path d="M220,140 L230,140 L235,150 L230,160 L220,160 L215,150 Z" fill="#808080" stroke="#404040" stroke-width="2"/>
 <path d="M235,150 L245,150 L250,160 L245,170 L235,170 L230,160 Z" fill="#808080" stroke="#404040" stroke-width="2"/>
 <path d="M250,160 L260,160 L265,170 L260,180 L250,180 L245,170 Z" fill="#808080" stroke="#404040" stroke-width="2"/>
-<path d="M265,170 L275,170 L280,180 L275,190 L265,190 L260,180 Z" fill="#808080" stroke="#404040" stroke-width="2"/>
-<path d="M280,180 L290,180 L295,190 L290,200 L280,200 L275,190 Z" fill="#808080" stroke="#404040" stroke-width="2"/>
 </g>
 </svg>
 </div>
@@ -62,6 +63,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:sys
 <div class="player">
 <div class="player-img"></div>
 </div>
+<div class="vestidor" onclick="openVestidor()">Vestidor</div>
 <div class="perfil">
 <div class="icon"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div>
 <div class="icon"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg></div>
@@ -74,20 +76,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:sys
 function play(){location.href='index.html'}
 function settings(){alert('Ajustes')}
 function market(){alert('Mercado')}
-
-// Sonido de entrada (simulado con Web Audio API)
-document.addEventListener('DOMContentLoaded', ()=>{
-const ctx = new (window.AudioContext || window.webkitAudioContext)();
-const osc = ctx.createOscillator();
-const gain = ctx.createGain();
-osc.connect(gain);
-gain.connect(ctx.destination);
-osc.type = 'sine';
-osc.frequency.value = 440;
-gain.gain.value = 0.1;
-osc.start();
-osc.stop(ctx.currentTime + 0.3);
-});
+function openVestidor(){alert('Vestidor')}
 </script>
 </body>
 </html>
