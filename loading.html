@@ -2,48 +2,77 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>AdrianCraft - Cargando</title>
+<title>AdrianCraft - Iniciando</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{background:#0a0a1a;overflow:hidden;width:100vw;height:100vh;display:flex;align-items:center;justify-content:center;font-family:system-ui,-apple-system,sans-serif}
-#loader{position:relative;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(ellipse at center,#1a1a2e 0%,#0a0a1a 100%)}
-.scene{perspective:600px;width:100px;height:100px;margin-bottom:30px}
-.cube{width:100px;height:100px;position:relative;transform-style:preserve-3d;animation:spin 3s infinite linear}
-@keyframes spin{to{transform:rotateX(360deg) rotateY(360deg)}}
-.face{position:absolute;width:100px;height:100px;border:1px solid rgba(255,255,255,0.1)}
-.front{background:#5a8f3c;transform:translateZ(50px)}
-.back{background:#8B6914;transform:rotateY(180deg) translateZ(50px)}
-.right{background:#6B4226;transform:rotateY(90deg) translateZ(50px)}
-.left{background:#6B4226;transform:rotateY(-90deg) translateZ(50px)}
-.top{background:#5a8f3c;transform:rotateX(90deg) translateZ(50px)}
-.bottom{background:#8B6914;transform:rotateX(-90deg) translateZ(50px)}
-.title{font-size:38px;font-weight:900;color:#fff;letter-spacing:3px;text-shadow:0 0 20px rgba(90,143,60,0.6);margin-bottom:6px;opacity:0;animation:fadeUp 0.8s 0.5s forwards}
-.ver{color:rgba(255,255,255,0.4);font-size:12px;letter-spacing:5px;margin-bottom:40px;opacity:0;animation:fadeUp 0.8s 0.8s forwards}
-.bar{width:240px;height:3px;background:rgba(255,255,255,0.1);border-radius:3px;overflow:hidden;opacity:0;animation:fadeUp 0.8s 1s forwards}
-.fill{height:100%;width:0%;background:linear-gradient(90deg,#5a8f3c,#8bc34a);transition:width 0.2s}
-.txt{color:rgba(255,255,255,0.5);font-size:11px;margin-top:12px;letter-spacing:2px;opacity:0;animation:fadeUp 0.8s 1s forwards}
-@keyframes fadeUp{to{opacity:1;transform:translateY(0)}from{opacity:0;transform:translateY(10px)}}
-#loader.hide{animation:fadeOut 0.6s forwards}
+html,body{width:100%;height:100%;overflow:hidden;background:#08080f;font-family:system-ui,-apple-system,sans-serif}
+#loader{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(ellipse at 50% 40%,#141420 0%,#08080f 100%)}
+.cube-scene{perspective:700px;width:100px;height:100px;margin-bottom:40px;opacity:0;animation:fadeIn 0.6s 0.3s forwards}
+.cube{width:100px;height:100px;position:relative;transform-style:preserve-3d;animation:rotate 4s infinite linear}
+@keyframes rotate{0%{transform:rotateX(-20deg) rotateY(0deg)}100%{transform:rotateX(-20deg) rotateY(360deg)}}
+.face{position:absolute;width:100px;height:100px;border:2px solid rgba(255,255,255,0.1);backface-visibility:hidden}
+.f1{background:linear-gradient(135deg,#5a8f3c 0%,#4a7a2e 100%);transform:translateZ(50px)}
+.f2{background:linear-gradient(135deg,#8B6914 0%,#6B4226 100%);transform:rotateY(180deg) translateZ(50px)}
+.f3{background:linear-gradient(135deg,#6B4226 0%,#5c3820 100%);transform:rotateY(90deg) translateZ(50px)}
+.f4{background:linear-gradient(135deg,#6B4226 0%,#5c3820 100%);transform:rotateY(-90deg) translateZ(50px)}
+.f5{background:linear-gradient(135deg,#5a8f3c 0%,#4a7a2e 100%);transform:rotateX(90deg) translateZ(50px)}
+.f6{background:linear-gradient(135deg,#8B6914 0%,#6B4226 100%);transform:rotateX(-90deg) translateZ(50px)}
+.title{font-size:40px;font-weight:900;color:#fff;letter-spacing:4px;text-shadow:0 0 25px rgba(90,143,60,0.8),0 0 40px rgba(90,143,60,0.4);margin-bottom:8px;opacity:0;animation:fadeIn 0.7s 0.6s forwards}
+.version{font-size:13px;color:rgba(255,255,255,0.5);letter-spacing:5px;font-weight:300;margin-bottom:45px;opacity:0;animation:fadeIn 0.7s 0.8s forwards}
+.bar-container{width:280px;height:4px;background:rgba(255,255,255,0.1);border-radius:4px;overflow:hidden;position:relative;opacity:0;animation:fadeIn 0.7s 1.0s forwards}
+.bar-fill{height:100%;width:0%;background:linear-gradient(90deg,#5a8f3c,#8bc34a);border-radius:4px;transition:width 0.3s ease-out;box-shadow:0 0 12px rgba(90,143,60,0.6)}
+.status{font-size:11px;color:rgba(255,255,255,0.4);margin-top:15px;letter-spacing:2px;opacity:0;animation:fadeIn 0.7s 1.0s forwards}
+@keyframes fadeIn{to{opacity:1;transform:translateY(0)}from{opacity:0;transform:translateY(10px)}}
+.glow{position:absolute;width:200px;height:200px;background:radial-gradient(circle,rgba(90,143,60,0.1) 0%,transparent 70%);border-radius:50%;animation:pulse 3s infinite}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:0.4}50%{transform:scale(1.4);opacity:0.6}}
+#loader.fade-out{animation:fadeOut 0.6s forwards}
 @keyframes fadeOut{to{opacity:0;pointer-events:none}}
 </style>
 </head>
 <body>
 <div id="loader">
-<div class="scene"><div class="cube"><div class="face front"></div><div class="face back"></div><div class="face right"></div><div class="face left"></div><div class="face top"></div><div class="face bottom"></div></div></div>
+<div class="glow"></div>
+<div class="cube-scene">
+<div class="cube">
+<div class="face f1"></div>
+<div class="face f2"></div>
+<div class="face f3"></div>
+<div class="face f4"></div>
+<div class="face f5"></div>
+<div class="face f6"></div>
+</div>
+</div>
 <div class="title">ADRIANCRAFT</div>
-<div class="ver">VERSION 1.0</div>
-<div class="bar"><div class="fill" id="fill"></div></div>
-<div class="txt" id="txt">INICIALIZANDO MOTOR 3D...</div>
+<div class="version">VERSIÓN 1.0</div>
+<div class="bar-container">
+<div class="bar-fill" id="barFill"></div>
+</div>
+<div class="status" id="status">INICIANDO MOTOR...</div>
 </div>
 <script>
-const msgs=['INICIALIZANDO MOTOR 3D...','CARGANDO TEXTURAS...','GENERANDO TERRENO...','PREPARANDO ENTIDADES...','OPTIMIZANDO MEMORIA...','LISTO'];
-let p=0;const f=document.getElementById('fill'),t=document.getElementById('txt');
-function step(){if(p>=100){setTimeout(()=>{document.getElementById('loader').classList.add('hide');setTimeout(()=>location.href='lobby.html',600)},200);return}
-p+=Math.random()*12+3;if(p>100)p=100;f.style.width=p+'%';t.textContent=msgs[Math.min(p/20|0,msgs.length-1)];setTimeout(step,180+Math.random()*200)}
-setTimeout(step,800)
+const messages=['INICIANDO MOTOR...','CARGANDO TEXTURAS...','GENERANDO TERRENO...','CARGANDO ENTIDADES...','INICIALIZANDO AUDIO...','PREPARANDO MUNDO...','LISTO'];
+let progress=0;
+const bar=document.getElementById('barFill');
+const status=document.getElementById('status');
+
+function updateProgress(){
+if(progress>=100){
+setTimeout(()=>{
+document.getElementById('loader').classList.add('fade-out');
+setTimeout(()=>location.href='lobby.html',600);
+},300);
+return;
+}
+progress+=Math.random()*10+2;
+if(progress>100)progress=100;
+bar.style.width=progress+'%';
+status.textContent=messages[Math.min(Math.floor(progress/14),messages.length-1)];
+setTimeout(updateProgress,200+Math.random()*150);
+}
+setTimeout(updateProgress,1000);
 </script>
 </body>
 </html>
