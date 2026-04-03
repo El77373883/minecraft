@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>AdrianCraft - Loading</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;touch-action:none;-webkit-tap-highlight-color:transparent;user-select:none}
+html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:'Courier New',monospace}
+
+/* === INTRO ÉPICO === */
+#intro{position:fixed;inset:0;z-index:1000;background:linear-gradient(135deg,#0a0510,#1a0a2e,#0f0a1a);display:flex;align-items:center;justify-content:center;flex-direction:column;animation:introFade 2.5s ease forwards}
+@keyframes introFade{0%{opacity:0}10%{opacity:1}90%{opacity:1}100%{opacity:0;pointer-events:none}}
+#intro-logo{font-size:clamp(3rem,9vw,5.5rem);font-weight:900;color:#fff;text-shadow:0 0 25px #4CAF50,0 0 50px #4CAF50,0 0 100px #66BB6A;margin-bottom:20px;animation:logoGlow 2s ease-in-out infinite}
+@keyframes logoGlow{0%,100%{transform:scale(1);text-shadow:0 0 25px #4CAF50,0 0 50px #4CAF50}50%{transform:scale(1.08);text-shadow:0 0 45px #66BB6A,0 0 90px #66BB6A,0 0 140px #4CAF50}}
+#intro-subtitle{color:#aaa;font-size:1.2rem;margin-bottom:40px;animation:slideUp 1s ease 0.5s forwards;opacity:0}
+@keyframes slideUp{from{opacity:0;transform:translateY(25px)}to{opacity:1;transform:translateY(0)}}
+#intro-particles{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.particle{position:absolute;width:5px;height:5px;background:#4CAF50;border-radius:50%;animation:particleFloat 4s ease-in-out infinite}
+@keyframes particleFloat{0%,100%{transform:translateY(100vh) scale(0);opacity:0}15%{opacity:1}85%{opacity:1}100%{transform:translateY(-30px) scale(1)}}
+
+/* === LOBBY PROFESIONAL === */
+#lobby{position:fixed;inset:0;z-index:500;background:linear-gradient(160deg,#0d1b2a,#1b263b,#0f3460,#1a1a2e);display:none;flex-direction:column;align-items:center;justify-content:space-between;padding:env(safe-area-inset-top) 20px calc(20px + env(safe-area-inset-bottom))}
+#lobby.active{display:flex}
+#lobby-header{width:100%;display:flex;align-items:center;justify-content:space-between;padding:5px 0}
+#skin-selector{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,0.12);padding:10px 16px;border-radius:10px;border:2px solid rgba(255,255,255,0.25);cursor:pointer}
+#skin-preview{width:36px;height:36px;border:2px solid #4CAF50;border-radius:5px;image-rendering:pixelated}
+#skin-label{color:#fff;font-size:0.9rem;font-weight:500}
+#lobby-title{font-size:clamp(2.8rem,8vw,4.5rem);font-weight:900;color:#5a6a5a;text-shadow:5px 5px 0 #1a2a1a,0 0 30px rgba(76,175,80,0.4);text-align:center;letter-spacing:3px;margin:10px 0}
+#lobby-title span{color:#4CAF50;text-shadow:5px 5px 0 #2d5a30,0 0 25px rgba(76,175,80,0.6)}
+#lobby-player{width:110px;height:190px;background:linear-gradient(180deg,#1a2a3a,#0d1b2a);border:4px solid #3a4a5a;border-radius:8px;margin:20px 0;image-rendering:pixelated;box-shadow:0 0 30px rgba(76,175,80,0.3);position:relative}
+#lobby-player::after{content:'';position:absolute;bottom:-10px;left:50%;transform:translateX(-50%);width:70px;height:10px;background:rgba(0,0,0,0.35);border-radius:50%;filter:blur(4px)}
+#lobby-buttons{display:grid;grid-template-columns:1fr;gap:12px;width:100%;max-width:300px;margin:10px 0}
+.lobby-btn{padding:16px 24px;font-size:1.15rem;font-weight:bold;background:linear-gradient(180deg,#2a3a4a,#1a2a3a);color:#fff;border:2px solid #4a5a6a;border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:12px;transition:all 0.15s;text-align:center}
+.lobby-btn:hover{background:linear-gradient(180deg,#3a4a5a,#2a3a4a);border-color:#5a6a7a;transform:translateY(-3px)}
+.lobby-btn:active{transform:translateY(2px);box-shadow:none}
+.lobby-btn.primary{background:linear-gradient(180deg,#4CAF50,#3d8b40);border-color:#2d5a30;box-shadow:0 5px 0 #1a3a1a}
+.lobby-btn.primary:active{box-shadow:0 2px 0 #1a3a1a}
+.lobby-btn.danger{background:linear-gradient(180deg,#e74c3c,#c0392b);border-color:#a93226}
+#lobby-footer{margin-top:auto;padding:15px 0;text-align:center;color:#666;font-size:0.9rem}
+#version{color:#4CAF50;font-weight:bold;font-size:1.1rem}
+
+/* === LOADING SCREEN === */
+#loading{position:fixed;inset:0;z-index:600;background:linear-gradient(135deg,#0a0e17,#0f1a2a);display:none;align-items:center;justify-content:center;flex-direction:column}
+#loading.active{display:flex}
+#load-text{margin-bottom:20px;font-size:1.2rem;color:#4CAF50;text-shadow:0 0 10px rgba(76,175,80,0.5)}
+#load-bar{width:220px;height:14px;background:#1a2a3a;border:2px solid #3a4a5a;border-radius:4px;overflow:hidden}
+#load-fill{height:100%;width:0%;background:linear-gradient(90deg,#4CAF50,#66BB6A);transition:width 0.3s}
+#load-percent{margin-top:10px;font-size:0.9rem;color:#aaa}
+
+/* === PÉTALOS DE CEREZO === */
+#petals{position:fixed;inset:0;pointer-events:none;z-index:45;overflow:hidden}
+.petal{position:absolute;width:10px;height:10px;background:linear-gradient(135deg,#ffb7c5,#ff8fa3,#ffc0cb);border-radius:50% 50% 50% 0;opacity:0.85;animation:petalFall linear infinite;box-shadow:0 0 5px rgba(255,183,197,0.5)}
+@keyframes petalFall{0%{transform:translateY(-15px) rotate(0deg) scale(0.7);opacity:0}10%{opacity:0.85}90%{opacity:0.85}100%{transform:translateY(100vh) rotate(720deg) scale(1);opacity:0}}
+
+/* === TOAST === */
+#toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.9);color:#fff;padding:12px 25px;border-radius:8px;border:2px solid #4CAF50;display:none;z-index:700;pointer-events:none;animation:toastSlide 0.3s ease}
+@keyframes toastSlide{from{opacity:0;transform:translateX(-50%) translateY(20px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+</style>
+</head>
+<body>
+
+<!-- === INTRO ÉPICO === -->
+<div id="intro">
+  <div id="intro-particles"></div>
+  <div id="intro-logo">Adrian<span style="color:#4CAF50">Craft</span></div>
+  <div id="intro-subtitle">Toca para comenzar tu aventura...</div>
+</div>
+
+<!-- === LOBBY === -->
+<div id="lobby">
+  <div id="lobby-header">
+    <div id="skin-selector">
+      <div id="skin-preview"></div>
+      <span id="skin-label">Skin: Clásica</span>
+    </div>
+  </div>
+  
+  <div id="lobby-title">Adrian<span>Craft</span></div>
+  <canvas id="lobby-player" width="110" height="190"></canvas>
+  
+  <div id="lobby-buttons">
+    <button class="lobby-btn primary" id="btn-start">🎮 Iniciar Partida</button>
+    <button class="lobby-btn" id="btn-multiplayer">👥 Multijugador</button>
+    <button class="lobby-btn" id="btn-settings">⚙️ Ajustes</button>
+    <button class="lobby-btn" id="btn-credits">📜 Créditos</button>
+    <button class="lobby-btn" id="btn-profile">👤 Perfil</button>
+  </div>
+  
+  <div id="lobby-footer">
+    <span id="version">v1.0</span> • Optimizado para iPhone
+  </div>
+</div>
+
+<!-- === LOADING === -->
+<div id="loading">
+  <div id="load-text">Generando mundo...</div>
+  <div id="load-bar"><div id="load-fill"></div></div>
+  <div id="load-percent">0%</div>
+</div>
+
+<!-- === PÉTALOS === -->
+<div id="petals"></div>
+<div id="toast"></div>
+
+<script>
+// === SONIDOS MINECRAFT ===
+const SFX = {
+  ctx: null,
+  init() { try { this.ctx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e){} },
+  play(type) {
+    if(!this.ctx) return;
+    const osc = this.ctx.createOscillator(), gain = this.ctx.createGain();
+    osc.connect(gain); gain.connect(this.ctx.destination);
+    const s = {
+      break:{f:280,d:0.08,t:'square'}, place:{f:220,d:0.07,t:'sine'},
+      jump:{f:450,d:0.12,t:'sine'}, hurt:{f:180,d:0.15,t:'sawtooth'},
+      craft:{f:650,d:0.15,t:'square'}, click:{f:350,d:0.05,t:'sine'},
+      cherry:{f:380,d:0.1,t:'sine'}
+    }[type] || {f:300,d:0.1,t:'square'};
+    osc.frequency.setValueAtTime(s.f, this.ctx.currentTime);
+    gain.gain.setValueAtTime(0.08, this.ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + s.d);
+    osc.type = s.t; osc.start(); osc.stop(this.ctx.currentTime + s.d);
+    if(navigator.vibrate && ['break','place','hurt'].includes(type)) navigator.vibrate(25);
+  }
+};
+
+// === INTRO ANIMATION ===
+function initIntro() {
+  const c = document.getElementById('intro-particles');
+  for(let i=0;i<40;i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.left = Math.random()*100+'%';
+    p.style.animationDelay = Math.random()*2+'s';
+    p.style.background = i%2 ? '#4CAF50' : '#66BB6A';
+    c.appendChild(p);
+  }
+}
+initIntro();
+
+// Transición Intro → Lobby
+document.getElementById('intro').onclick = () => {
+  SFX.init(); SFX.play('click');
+  document.getElementById('intro').style.display = 'none';
+  document.getElementById('lobby').classList.add('active');
+  startPetals();
+};
+
+// === LOBBY PLAYER ANIMATION ===
+const lp = document.getElementById('lobby-player'), lctx = lp.getContext('2d');
+function drawPlayer() {
+  lctx.clearRect(0,0,110,190);
+  const t = Date.now()/700, b = Math.sin(t)*2;
+  lctx.save(); lctx.translate(55,125+b);
+  lctx.fillStyle='rgba(0,0,0,0.2)'; lctx.beginPath(); lctx.ellipse(0,38,18,5,0,0,Math.PI*2); lctx.fill();
+  lctx.fillStyle='#2C1B14'; lctx.fillRect(-10,20+Math.sin(t*2)*2,7,18); lctx.fillRect(3,20-Math.sin(t*2)*2,7,18);
+  lctx.fillStyle='#4A90E2'; lctx.fillRect(-15,-30,30,50); lctx.fillStyle='#357ABD'; lctx.fillRect(-13,-27,26,44);
+  lctx.save(); lctx.translate(-18,-27); lctx.rotate(Math.sin(t*2)*0.15-0.3); lctx.fillStyle='#4A90E2'; lctx.fillRect(-4,0,8,28); lctx.restore();
+  lctx.save(); lctx.translate(18,-27); lctx.rotate(-Math.sin(t*2)*0.15+0.3); lctx.fillStyle='#4A90E2'; lctx.fillRect(-4,0,8,28); lctx.restore();
+  lctx.fillStyle='#E8C97E'; lctx.fillRect(-13,-48,26,18); lctx.fillStyle='#5B3A29'; lctx.fillRect(-13,-52,26,6);
+  lctx.fillStyle='#2C3E50'; lctx.fillRect(-8,-41,5,5); lctx.fillRect(3,-41,5,5);
+  lctx.fillStyle='#D4A66A'; lctx.fillRect(-3,-38,6,6); lctx.fillStyle='#8B5A2B'; lctx.fillRect(-6,-34,12,3);
+  lctx.restore(); requestAnimationFrame(drawPlayer);
+}
+drawPlayer();
+
+// === SKIN SELECTOR ===
+const skins = [
+  {name:'Clásica', c:{h:'#E8C97E',b:'#4A90E2',l:'#2C1B14'}},
+  {name:'Ninja', c:{h:'#2C3E50',b:'#1a1a2e',l:'#0f0f1a'}},
+  {name:'Aventurero', c:{h:'#D4A66A',b:'#8B6914',l:'#5C3A1E'}},
+  {name:'Rosa', c:{h:'#FFB7C5',b:'#FF8FA3',l:'#E8A8C8'}}
+];
+let curSkin = 0;
+function updSkin() {
+  const s = skins[curSkin], c = s.c, x = lp.getContext('2d');
+  x.clearRect(0,0,110,190); x.save(); x.translate(55,125);
+  x.fillStyle=c.l; x.fillRect(-10,20,7,18); x.fillRect(3,20,7,18);
+  x.fillStyle=c.b; x.fillRect(-15,-30,30,50);
+  x.fillStyle=c.h; x.fillRect(-13,-48,26,18);
+  x.fillStyle='#2C3E50'; x.fillRect(-8,-41,5,5); x.fillRect(3,-41,5,5);
+  x.restore();
+  document.getElementById('skin-label').textContent = `Skin: ${s.name}`;
+  document.getElementById('skin-preview').style.background = c.b;
+}
+document.getElementById('skin-selector').onclick = () => { curSkin = (curSkin+1)%skins.length; updSkin(); SFX.play('click'); };
+updSkin();
+
+// === PÉTALOS DE CEREZO ===
+function spawnPetal() {
+  const p = document.createElement('div'); p.className = 'petal';
+  p.style.left = Math.random()*100+'%';
+  p.style.animationDuration = (8+Math.random()*6)+'s';
+  p.style.animationDelay = Math.random()*2+'s';
+  document.getElementById('petals').appendChild(p);
+  setTimeout(()=>p.remove(), 15000);
+}
+function startPetals() { for(let i=0;i<20;i++) setTimeout(spawnPetal, i*250); setInterval(spawnPetal, 1800); }
+
+// === TOAST ===
+function toast(m) {
+  const t = document.getElementById('toast'); t.textContent = m; t.style.display = 'block';
+  t.style.animation = 'none'; setTimeout(()=>t.style.animation='toastSlide 0.3s ease',10);
+  setTimeout(()=>t.style.display='none',2200);
+}
+
+// === BOTONES DEL LOBBY ===
+document.getElementById('btn-start').onclick = async () => {
+  SFX.play('craft');
+  document.getElementById('lobby').classList.remove('active');
+  document.getElementById('loading').classList.add('active');
+  
+  // Simular carga de mundo
+  const fb = document.getElementById('load-fill'), pc = document.getElementById('load-percent');
+  for(let i=0; i<=100; i+=5) {
+    fb.style.width = i+'%'; pc.textContent = i+'%';
+    await new Promise(r=>setTimeout(r,30));
+  }
+  
+  // Redirigir al juego con seed
+  const seed = Date.now();
+  localStorage.setItem('ac_seed', seed);
+  localStorage.setItem('ac_skin', curSkin);
+  window.location.href = `index.html?seed=${seed}&skin=${curSkin}`;
+};
+
+document.getElementById('btn-multiplayer').onclick = () => { toast('🔜 Multijugador pronto'); SFX.play('click'); };
+document.getElementById('btn-settings').onclick = () => { toast('⚙️ Sonido: ON | Gráficos: Alto'); SFX.play('click'); };
+document.getElementById('btn-credits').onclick = () => { toast('🎮 AdrianCraft v1.0 • Hecho con ❤️'); SFX.play('click'); };
+document.getElementById('btn-profile').onclick = () => { toast('👤 Adrian | Nivel 1'); SFX.play('click'); };
+
+// Inicializar audio al primer toque
+document.addEventListener('touchstart', ()=>SFX.init(), {once:true});
+</script>
+</body>
+</html>
